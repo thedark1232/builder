@@ -1,0 +1,225 @@
+--программа подсчитывает количество блоков в таблицах расположения блоков построек
+--выводит названия и количество на монитор компьютера 0
+---------------БИБЛИОТЕКИ--------------------
+local computer = require("computer")
+local term = require("term")
+---------------ТАБЛИЦЫ-----------------------
+local count_table = {}
+local count_names_blocks = {} --подсчитывает в функции таблицу имен блоков в чанке, для вывода через print()
+local names_blocks = {} --а это сами названия блоков
+local table_planks = {} --таблица планок(названий, количество в объекте и вид планки)
+local table_planks_rus = {} --загружаемая таблица видов планок
+local pairs_lib = {pair_blocks = {},  pair_planks = {}}
+local table_meta_planks_name = {[0] = "Дубовые доски", [1] = "Еловые доски", [2] = "Березовые доски", [3] = "Доски из тропического дерева", [4] = "Доски из акации", [5] = "Доски из тёмного дуба"}
+local table_hardened_clay = {[0] = "белая обож. глина", [1] = "оранжевая обож. глина", [2] = "пурпурная обож. глина", [3] = "голубая обож. глина", [4] = "желтая обож. глина", [5] = "лаймовая обож. глина", [6] = "розовая обож. глина", [7] = "серая обож. глина", [8] = "светло-серая обож. глина", [9] = "бирюзовая обож. глина", [10] = "фиолетовая обож. глина", [11] = "синяя обож. глина", [12] = "коричневая обож. глина", [13] = "зеленая обож. глина", [14] = "красная обож. глина", [15] = "черная обож. глина"}
+local table_hardened_glass = {[0] = "белое стекло", [1] = "оранжевое стекло", [2] = "пурпурное стекло", [3] = "голубое стекло", [4] = "желтое стекло", [5] = "лаймовое стекло", [6] = "розовое стекло", [7] = "серое стекло", [8] = "светло-серое стекло", [9] = "бирюзовое стекло", [10] = "фиолетовое стекло", [11] = "синее стекло", [12] = "коричневое стекло", [13] = "зеленое стекло", [14] = "красное стекло", [15] = "черное стекло"}
+local table_hardened_glass_pane = {[0] = "белая стекл. панель", [1] = "оранжевая стекл. панель", [2] = "пурпурная стекл. панель", [3] = "голубая стекл. панель", [4] = "желтая стекл. панель", [5] = "лаймовая стекл. панель", [6] = "розовая стекл. панель", [7] = "серая стекл. панель", [8] = "светло-серая стекл. панель", [9] = "бирюзовая стекл. панель", [10] = "фиолетовая стекл. панель", [11] = "синяя стекл. панель", [12] = "коричневая стекл. панель", [13] = "зеленая стекл. панель", [14] = "красная стекл. панель", [15] = "черная стекл. панель"}
+local table_wool = {[0] = "белая шерсть", [1] = "оранжевая шерсть", [2] = "пурпурная шерсть", [3] = "голубая шерсть", [4] = "желтая шерсть", [5] = "лаймовая шерсть", [6] = "розовая шерсть", [7] = "серая шерсть", [8] = "светло-серая шерсть", [9] = "бирюзовая шерсть", [10] = "фиолетовая шерсть", [11] = "синяя шерсть", [12] = "коричневая шерсть", [13] = "зеленая шерсть", [14] = "красная шерсть", [15] = "черная шерсть"}
+local special_blocks = {["minecraft:stained_hardened_clay"] = {[0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false, [9] = false, [10] = false, [11] = false, [12] = false, [13] = false, [14] = false, [15] = false, [16] = false},
+						["minecraft:stained_glass"] = {[0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false, [9] = false, [10] = false, [11] = false, [12] = false, [13] = false, [14] = false, [15] = false, [16] = false},
+						["minecraft:stained_glass_pane"] = {[0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false, [9] = false, [10] = false, [11] = false, [12] = false, [13] = false, [14] = false, [15] = false, [16] = false},
+						["minecraft:wool"] = {[0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false, [9] = false, [10] = false, [11] = false, [12] = false, [13] = false, [14] = false, [15] = false, [16] = false}}
+local special_blocks2 = {["minecraft:stained_hardened_clay"] = false, ["minecraft:stained_glass"] = false, ["minecraft:stained_glass_pane"] = false, ["minecraft:wool"] = false}
+local special_blocks3 = {["minecraft:stained_hardened_clay"] = {[0] = "белая обож. глина", [1] = "оранжевая обож. глина", [2] = "пурпурная обож. глина", [3] = "голубая обож. глина", [4] = "желтая обож. глина", [5] = "лаймовая обож. глина", [6] = "розовая обож. глина", [7] = "серая обож. глина", [8] = "светло-серая обож. глина", [9] = "бирюзовая обож. глина", [10] = "фиолетовая обож. глина", [11] = "синяя обож. глина", [12] = "коричневая обож. глина", [13] = "зеленая обож. глина", [14] = "красная обож. глина", [15] = "черная обож. глина"},
+						 ["minecraft:stained_glass"] = {[0] = "белое стекло", [1] = "оранжевое стекло", [2] = "пурпурное стекло", [3] = "голубое стекло", [4] = "желтое стекло", [5] = "лаймовое стекло", [6] = "розовое стекло", [7] = "серое стекло", [8] = "светло-серое стекло", [9] = "бирюзовое стекло", [10] = "фиолетовое стекло", [11] = "синее стекло", [12] = "коричневое стекло", [13] = "зеленое стекло", [14] = "красное стекло", [15] = "черное стекло"},
+						 ["minecraft:stained_glass_pane"] = {[0] = "белая стекл. панель", [1] = "оранжевая стекл. панель", [2] = "пурпурная стекл. панель", [3] = "голубая стекл. панель", [4] = "желтая стекл. панель", [5] = "лаймовая стекл. панель", [6] = "розовая стекл. панель", [7] = "серая стекл. панель", [8] = "светло-серая стекл. панель", [9] = "бирюзовая стекл. панель", [10] = "фиолетовая стекл. панель", [11] = "синяя стекл. панель", [12] = "коричневая стекл. панель", [13] = "зеленая стекл. панель", [14] = "красная стекл. панель", [15] = "черная стекл. панель"},
+						 ["minecraft:wool"] = {[0] = "белая шерсть", [1] = "оранжевая шерсть", [2] = "пурпурная шерсть", [3] = "голубая шерсть", [4] = "желтая шерсть", [5] = "лаймовая шерсть", [6] = "розовая шерсть", [7] = "серая шерсть", [8] = "светло-серая шерсть", [9] = "бирюзовая шерсть", [10] = "фиолетовая шерсть", [11] = "синяя шерсть", [12] = "коричневая шерсть", [13] = "зеленая шерсть", [14] = "красная шерсть", [15] = "черная шерсть"}}
+local special_blocks_names = {"minecraft:stained_hardened_clay", "minecraft:stained_glass", "minecraft:stained_glass_pane", "minecraft:wool"}	 
+local special_blocks_counts = {["minecraft:stained_hardened_clay"] = {[0] = 0, [1] = 0, [2] = 0, [3] = 0, [4] = 0, [5] = 0, [6] = 0, [7] = 0, [8] = 0, [9] = 0, [10] = 0, [11] = 0, [12] = 0, [13] = 0, [14] = 0, [15] = 0, [16] = 0},
+						["minecraft:stained_glass"] = {[0] = 0, [1] = 0, [2] = 0, [3] = 0, [4] = 0, [5] = 0, [6] = 0, [7] = 0, [8] = 0, [9] = 0, [10] = 0, [11] = 0, [12] = 0, [13] = 0, [14] = 0, [15] = 0, [16] = 0},
+						["minecraft:stained_glass_pane"] = {[0] = 0, [1] = 0, [2] = 0, [3] = 0, [4] = 0, [5] = 0, [6] = 0, [7] = 0, [8] = 0, [9] = 0, [10] = 0, [11] = 0, [12] = 0, [13] = 0, [14] = 0, [15] = 0, [16] = 0},
+						["minecraft:wool"] = {[0] = 0, [1] = 0, [2] = 0, [3] = 0, [4] = 0, [5] = 0, [6] = 0, [7] = 0, [8] = 0, [9] = 0, [10] = 0, [11] = 0, [12] = 0, [13] = 0, [14] = 0, [15] = 0, [16] = 0}}
+---------------ПЕРЕМЕННЫЕ--------------------
+local pair_count  = 0 --количество своев в таблице, высчитывается при стартовых проверках
+local all_block_in_chank = 0 --общее количество блоков в чанке
+---------------ФУНКЦИИ----------------
+--загрузить библиотеку расположния блоков(используется вместе с безопастным режимом)
+function load_function(programm_name)
+	local programm = require(programm_name)
+	count_table = programm.build_pair()
+end
+--загрузить библиотеку планок
+function load_planks_library()
+	local tble_planks = require("table_planks")
+	table_planks_rus = tble_planks.build_pair()
+end
+--дебаг ентер(выводит текст на экран, с подтверждением нажатия энтер)
+function deb_enter(what_text)
+	if what_text == nil then what_text = "имеет значение nil" end
+	print(what_text)
+	print("жми ентер для продолжения")
+	local lol_enter = io.read()
+end
+--главное меню выбора параметров
+function start_main_menu()
+	term.clear()
+	::again::
+	print("ВЫБОР ДЕЙСТВИЙ:")
+	print("1 - количество всех блоков по порядку")
+	print("2 - количество всех планок")
+	print("3 - постройка склада")
+	print("4 - цвета особых блоков")
+	print("0 - выход из программы")
+	local what_number = tonumber(io.read())
+	if what_number == 0 then
+		term.clear()
+		print("программа завершена")
+	elseif what_number == 1 then
+		term.clear()
+		get_all_blocks(1)
+	elseif what_number == 2 then
+		term.clear()
+		get_all_blocks(2)
+	elseif what_number == 4 then
+		term.clear()
+		for g = 1,4 do
+			if special_blocks2[special_blocks_names[g]] then
+				function_spelial_blocks("--------------------",special_blocks_names[g])
+				deb_enter("--------------------")
+			end
+		end
+	else
+		term.clear()
+		computer.beep(1000, 0.1)
+		print("введена неизвестная командa..")
+		print("попробуй заного")
+		goto again
+	end
+end
+--подсчитывает блоки сразу, при старте программы
+function get_all_blocks2()
+	local name_planks = ""
+	local name_pl = ""
+	for i = 1, pair_count do
+		for k,v in ipairs(count_table[tostring(i)].name) do
+			if v == "minecraft:stone_slab" or v == "minecraft:wooden_slab"  or v == "minecraft:double_wooden_slab" or v == "minecraft:double_stone_slab" then
+				if v == "minecraft:stone_slab" or v == "minecraft:double_stone_slab" then
+					name_planks = "stone"
+				elseif v == "minecraft:wooden_slab" or v == "minecraft:double_wooden_slab" then 
+					name_planks = "wooden"
+				end
+				name_pl = table_planks_rus[name_planks][count_table[tostring(i)].meta[k]]["label"]
+				if table_planks[name_pl] == nil then
+					table_planks[name_pl] = 1
+				else
+					table_planks[name_pl] = table_planks[name_pl] + 1
+				end	
+			end
+			if count_names_blocks[v] == nil then
+				count_names_blocks[v] = 1
+				names_blocks[v] = v
+			else
+				count_names_blocks[v] = count_names_blocks[v] + 1
+			end
+			for g = 1,4 do
+				if v == special_blocks_names[g] then
+					special_blocks2[special_blocks_names[g]] = true
+					special_blocks[special_blocks_names[g]][count_table[tostring(i)].meta[k]] = true
+					special_blocks_counts[special_blocks_names[g]][count_table[tostring(i)].meta[k]] = special_blocks_counts[special_blocks_names[g]][count_table[tostring(i)].meta[k]] + 1
+				end
+			end
+		end
+	end
+end
+--выводит на экран все блоки и все стаки блоков
+function get_all_blocks(mode)
+	local strValue
+	local ent, stacks, strStacks, correct
+	if mode == 1 then
+		deb_enter("после каждого подсчитанного блока,")
+		term.clear()
+		for n,v in pairs(names_blocks) do
+			stacks = count_names_blocks[n] / 64
+			strStacks = string_stacks_count(stacks)
+			if count_names_blocks[n] > 64 then correct = correct_stack(count_names_blocks[n]) end
+			print("всего блоков "..n.. " - " ..count_names_blocks[n])
+			if count_names_blocks[n] > 64 then print(correct) else print("стаки: " ..strStacks) end
+			ent = io.read()
+		end
+	elseif mode == 2 then
+		for key,val in pairs(table_planks) do
+			if val > 64 then correct = correct_stack(val) end
+			print("всего планок: " ..key.. " - " ..val)
+			strValue = string_stacks_count(val / 64)
+			if val > 64 then print(correct) else print("стаки: " ..strValue) end
+		end
+	elseif mode == 3 then --создание таблиц для постройки склада
+		for n,_ in pairs(names_blocks) do
+			pairs_lib.pair_blocks[#pair_blocks + 1] = n
+		end
+		for key,val in pairs(table_planks) do
+			pairs_lib.pair_planks[#pair_planks + 1] = key
+		end
+	end
+	deb_enter("подсчет завершен")
+end
+--подсчитывает и возвращает стринговое значение стаков
+function string_stacks_count(num)
+	if num == 0.5 then return "пол стака"
+	elseif num == 1 then return "ровно стак"
+	elseif num < 0.5 then return "меньше пол стака"
+	elseif num > 0.5 and num < 1 then return "больше пол стака"
+	else return string.format("%.1f", num) end --вывеси количество стаков с одним символом после точки
+end
+--вывести точное знакие количества стаков. Пример: досок = 84 --> вернет строку "1 стак и 24 блока"
+function correct_stack(num)
+	local left = math.floor(num / 64)
+	local right = tostring(num % 64)
+	return "стаки: " ..left.. " и блоки: " ..right
+end
+--отображает на экране цвета особых блоков(аргументы:имя отображаемого блока, майнкрафтовское имя minecraft:...)
+function function_spelial_blocks(block_name, minecraft_block_name)
+	print(block_name)
+	for k,v in pairs(special_blocks[minecraft_block_name]) do
+		if v then
+		io.write(special_blocks3[minecraft_block_name][k] .. " - ")
+		print(correct_stack(special_blocks_counts[minecraft_block_name][k]))
+		end
+	end
+end
+---------------НАЧАЛО РАБОТЫ-----------------
+do
+	--загрузка необходимой библиотеки
+	print("введи название таблицы блоков чанка, - \"без .lua\"")
+	local programm_name = io.read()
+	local load_done, _ = pcall(load_function, programm_name)
+
+	if not load_done then print("ПОМОЩНИК:"); computer.beep(1000,1); deb_enter("не удалось загрузить файл ".. programm_name); term.clear(); os.exit() end
+	load_done, _ = pcall(load_planks_library)
+	if not load_done then print("ПОМОЩНИК:"); computer.beep(1000,1); deb_enter("не удалось загрузить библиотеку планок"); term.clear(); os.exit() end
+	print("файл: " ..programm_name.. " загружен успешно")
+	--посчитать количество слоев в таблице
+	for _,val in pairs(count_table) do
+		pair_count = pair_count + 1
+		for k,v in pairs(val.meta) do all_block_in_chank = all_block_in_chank + 1 end
+	end
+	--подсчет количества блоков
+	print("веду подсчет блоков...")
+	get_all_blocks2()
+	print("подсчет блоков завершен")
+	print("общее кол-во блоков " ..all_block_in_chank)
+	print("количество слоев объекта = " ..tostring(pair_count))
+	print("---------------------------------------")
+	print("            ОСОБЫЕ БЛОКИ               ")
+	
+	if special_blocks2[special_blocks_names[1]] then
+		print("цветная обоженная глина")
+	end
+	if special_blocks2[special_blocks_names[2]] then
+		print("цветное стекло")
+	end
+	if special_blocks2[special_blocks_names[3]] then
+		print("цветная стеклянная панель")
+	end
+		if special_blocks2[special_blocks_names[4]] then
+		print("цветная шерсть")
+	end
+	deb_enter("---------------------------------------")
+	--функция входа в главное меню--
+	start_main_menu()
+end
+
+	return pairs_lib
+--return "it's done"
+--Пример a = dofile("название этой программы")
+--print(a) -->> "it's done"
