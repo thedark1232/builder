@@ -547,7 +547,7 @@ function return_to_base_and_get_planks(block_name, meta_num, block_num_in_invent
 	move(start_position.x - 5, start_position.y, start_position.z + 1)
 	while navigate.getFacing() ~= 3 do table_sides[3][navigate.getFacing()]() end --поворот на юг
 	term.clear()
-	while geo.analyze(3).name == "minecraft:air" or geo.analyze(3).name == "OpenComputers:robot" do
+	while geo.analyze(3).name == "minecraft:air" or geo.analyze(3).name == "OpenComputers:robot" or geo.analyze(3).name == "Thaumcraft:blockAiry" do
 		local analyze = geo.analyze(0)
 		if analyze.name == block_name and analyze.metadata == meta_num then
 			robot.transferTo(1) --перемещение из активного слота в первый слот робота
