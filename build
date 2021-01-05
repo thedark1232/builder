@@ -320,6 +320,7 @@ function return_and_find_item(block_name, meta, check_meta)
 	--проверка энергии
 	table_librarys["energyChecker"].check_energy_in_base()
 	table_librarys["moveLibrary"].z_move(start_position.z + 1)
+	while geo.analyze(3).name == "OpenComputers:robot" do computer.beep(1000, 1); table_librarys["moveLibrary"].z_move(start_position.z + 2); term.clear(); print("на моем пути робот"); print("пытаюсь уступить дорогу"); weit_ten_seconds(); able_librarys["moveLibrary"].z_move(start_position.z + 1) end
 	table_librarys["moveLibrary"].x_y_move(start_position.x - 3, start_position.y)
 	::next_check::
 	while geo.analyze(0).name ~= block_name do
@@ -544,6 +545,7 @@ function return_to_base_and_get_planks(block_name, meta_num, block_num_in_invent
 	move(start_position.x, start_position.y, start_position.z)
 	table_librarys["energyChecker"].check_energy_in_base()
 	table_librarys["moveLibrary"].z_move(start_position.z + 1)
+	while geo.analyze(3).name == "OpenComputers:robot" do computer.beep(1000, 1); table_librarys["moveLibrary"].z_move(start_position.z + 2); term.clear(); print("на моем пути робот"); print("пытаюсь уступить дорогу"); weit_ten_seconds(); able_librarys["moveLibrary"].z_move(start_position.z + 1) end
 	move(start_position.x - 5, start_position.y, start_position.z + 1)
 	while navigate.getFacing() ~= 3 do table_sides[3][navigate.getFacing()]() end --поворот на юг
 	term.clear()
