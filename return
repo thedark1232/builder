@@ -1,0 +1,59 @@
+--возврат робота на стартовую позицию
+local robot = require("robot")
+local moveLibrary = require("moveLibrary")
+local component = require("component")
+local computer = require("computer")
+local term = require("term")
+
+local navigate = component.navigation
+
+local file, file_text
+local creat_coords = false
+local mode_number
+local x,y,z
+
+function creat_file()
+	file = io.open("MyCoords","w")
+	x,z,y = navigate.getPosition()
+	file:write(x.."\n")
+	file:write(y.."\n")
+	file:write(z.."\n")
+	file:close()
+	term.clear()
+	computer.beep(1000,0.1)
+	computer.beep(1000,0.1)
+	computer.beep(1000,0.1)
+	print("КООРДИНАТЫ ПОЗИЦИИ РОБОТА СОХРАНЕНЫ. ПРИ СЛЕДУЮЩЕМ ОТКРЫТИИ ФАЙЛА, РОБОТ ПОЕДЕТ НА ЭТИ КООРДИНАТЫ")
+end
+
+do
+	file = io.open("MyCoords")
+	if file == nil then
+		print("ВОЗВРАЩАТЬ РОБОТА НА ЭТУ ПОЗИЦИЮ? 1 = ДА, 2 = НЕТ")
+		mode_number = tonumber(io.read())
+		if mode_number == 1 then
+			creat_file()
+			os.exit()
+		else
+			os.exit()
+		end
+	else
+		print("ВЫДВИЖЕНИЕ НА СТАРТОВУЮ ПОЗИЦИЮ? 1 = ДА, 0 = ПЕРЕЗАПИСАТЬ ФАЙЛ НА ТЕКУЩУЮ ПОЗИЦИЮ")
+		mode_number = tonumber(io.read())
+		if mode_number == 1 then
+				local ln = {}
+				for line in file:lines() do
+					ln[#ln + 1] = tonumber(line)
+				end
+				moveLibrary.moveOut(ln[1], ln[2], ln[3])
+				os.exit()
+		elseif mode_number == 0 then
+			creat_file()
+			print("ФАЙЛ ПЕРЕСОЗДАН")
+			os.exit()
+		end
+	end
+	if mode_number == 1 then
+		creat_file()
+	end
+end
