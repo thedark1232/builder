@@ -1,0 +1,44 @@
+local filesystem = require "filesystem"
+local component = require "component"
+local inv = component.inventory_controller
+
+local librarys = {{"/usr/lib/energyChecker.lua","https://raw.githubusercontent.com/thedark1232/builder/main/energyChecker"},
+				  {"/usr/lib/sizeLibrary.lua","https://raw.githubusercontent.com/thedark1232/builder/main/sizeLibrary"},
+				  {"/usr/lib/moveLibrary.lua","https://raw.githubusercontent.com/thedark1232/builder/main/moveLibrary"},
+				  {"/home/build","https://raw.githubusercontent.com/thedark1232/builder/main/build"},
+				  {"/home/werehouse","https://raw.githubusercontent.com/thedark1232/builder/main/werehouse"},
+				  {"/home/return", "https://raw.githubusercontent.com/thedark1232/builder/main/return"},
+				  {"/usr/lib/table_planks.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/table_planks_rus"},
+				  {"/usr/lib/table_planks.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/table_planks_eng"}
+				}
+
+--дебаг, нажать энтер для продолжения
+function deb_enter(what_text)
+	if what_text ~= nil then print(what_text) end
+	print("жми ентер для продолжения")
+	local lol_enter = io.read()
+end
+
+do
+	filesystem.makeDirectory("/usr/lib/")
+	for i = 1, 7 do filesystem.remove(librarys[i][1]) end --удаление устаревших программ
+	repeat
+		local slot = inv.getStackInInternalSlot(1)
+		if slot == nil then
+			deb_enter("положи гаечный ключ в первый слот робота")
+		else
+			if slot.name ~= "OpenComputers:wrench" then
+				deb_enter("положи гаечный ключ в первый слот робота")
+			else
+				if slot.label == "Ключ" then
+					os.execute("wget " ..librarys[7][2].. " " ..librarys[7][1])
+				else
+					os.execute("wget " ..librarys[8][2].. " " ..librarys[8][1])
+				end
+			end
+		end	
+	until inv.getStackInInternalSlot(1).name == "OpenComputers:wrench"
+	for i = 1,6 do os.execute("wget " ..librarys[i][2].. " " ..librarys[i][1]) end
+	
+
+end
