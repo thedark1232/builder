@@ -1,0 +1,34 @@
+--edit /usr/lib/table_planks.lua
+
+local planks_library = {}
+function planks_library.build_pair()
+local table_planks = {[1] = "minecraft:wooden_slab", [2] = "minecraft:stone_slab",
+				  ["wooden"] = {[4] =  {["label"] = "Acacia Wood Slab", ["down"] = true}, --Плита из акации
+					            [12] = {["label"] = "Acacia Wood Slab", ["down"] = false},
+								[5] =  {["label"] = "Dark Oak Wood Slab", ["down"] = true}, --Плита из тёмного дуба
+								[13] = {["label"] = "Dark Oak Wood Slab", ["down"] = false},
+								[2] =  {["label"] = "Birch Wood Slab", ["down"] = true}, --Берёзовая плита
+								[10] = {["label"] = "Birch Wood Slab", ["down"] = false},
+								[3] =  {["label"] = "Jungle Wood Slab", ["down"] = true}, --Плита из тропического дерева
+								[11] = {["label"] = "Jungle Wood Slab", ["down"] = false},
+								[0] =  {["label"] = "Oak Wood Slab", ["down"] = true}, --Дубовая плита
+								[8] =  {["label"] = "Oak Wood Slab", ["down"] = false},
+								[1] =  {["label"] = "Spruce Wood Slab", ["down"] = true}, --Еловая панель
+								[9] =  {["label"] = "Spruce Wood Slab", ["down"] = false}},
+				   ["stone"] = {[6] =  {["label"] = "Nether Brick Slab", ["down"] = true}, --Плита из адского кирпича
+								[14] = {["label"] = "Nether Brick Slab", ["down"] = false},
+								[0] =  {["label"] = "Stone Slab", ["down"] = true}, --Каменная плита
+								[8] =  {["label"] = "Stone Slab", ["down"] = false},
+								[5] =  {["label"] = "Stone Bricks Slab", ["down"] = true}, --Плита из каменных кирпичей
+								[13] = {["label"] = "Stone Bricks Slab", ["down"] = false},
+								[1] =  {["label"] = "Sandstone Slab", ["down"] = true}, --Плита из песчаника
+								[9] =  {["label"] = "Sandstone Slab", ["down"] = false},
+								[7] =  {["label"] = "Quartz Slab", ["down"] = true}, --Кварцевая плита
+								[15] = {["label"] = "Quartz Slab", ["down"] = false},
+								[3] =  {["label"] = "Cobblestone Slab", ["down"] = true}, --Плита из булыжника
+								[11] = {["label"] = "Cobblestone Slab", ["down"] = false},
+								[4] =  {["label"] = "Bricks Slab", ["down"] = true}, --Кирпичная плита
+								[12] = {["label"] = "Bricks Slab", ["down"] = false}}}
+	return table_planks
+	end
+return planks_library
