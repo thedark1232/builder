@@ -1,0 +1,35 @@
+--edit /usr/lib/table_planks.lua
+--библиотека поиска планок в инвентаре робота
+
+local planks_library = {}
+function planks_library.build_pair()
+local table_planks = {[1] = "minecraft:wooden_slab", [2] = "minecraft:stone_slab",
+				  ["wooden"] = {[4] =  {["label"] = "Плита из акации", ["down"] = true},
+					            [12] = {["label"] = "Плита из акации", ["down"] = false},
+								[5] =  {["label"] = "Плита из тёмного дуба", ["down"] = true},
+								[13] = {["label"] = "Плита из тёмного дуба", ["down"] = false},
+								[2] =  {["label"] = "Берёзовая плита", ["down"] = true},
+								[10] = {["label"] = "Берёзовая плита", ["down"] = false},
+								[3] =  {["label"] = "Плита из тропического дерева", ["down"] = true},
+								[11] = {["label"] = "Плита из тропического дерева", ["down"] = false},
+								[0] =  {["label"] = "Дубовая плита", ["down"] = true},
+								[8] =  {["label"] = "Дубовая плита", ["down"] = false},
+								[1] =  {["label"] = "Еловая панель", ["down"] = true},
+								[9] =  {["label"] = "Еловая панель", ["down"] = false}},
+				   ["stone"] = {[6] =  {["label"] = "Плита из адского кирпича", ["down"] = true},
+								[14] = {["label"] = "Плита из адского кирпича", ["down"] = false},
+								[0] =  {["label"] = "Каменная плита", ["down"] = true},
+								[8] =  {["label"] = "Каменная плита", ["down"] = false},
+								[5] =  {["label"] = "Плита из каменных кирпичей", ["down"] = true},
+								[13] = {["label"] = "Плита из каменных кирпичей", ["down"] = false},
+								[1] =  {["label"] = "Плита из песчаника", ["down"] = true},
+								[9] =  {["label"] = "Плита из песчаника", ["down"] = false},
+								[7] =  {["label"] = "Кварцевая плита", ["down"] = true},
+								[15] = {["label"] = "Кварцевая плита", ["down"] = false},
+								[3] =  {["label"] = "Плита из булыжника", ["down"] = true},
+								[11] = {["label"] = "Плита из булыжника", ["down"] = false},
+								[4] =  {["label"] = "Кирпичная плита", ["down"] = true},
+								[12] = {["label"] = "Кирпичная плита", ["down"] = false}}}
+	return table_planks
+	end
+return planks_library
