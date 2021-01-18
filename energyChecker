@@ -1,0 +1,37 @@
+--проверяет оставшуюся энергию робота
+--edit /usr/lib/energyChecker.lua
+--v 1.0
+local checker_lib = {}
+
+local computer = require("computer")
+
+--аргумент нужен для определения минимального количество энергии, при котором функция вернет true
+function checker_lib.how_much_enegry(energy_min)
+	local energy = computer.energy()
+	if energy < energy_min then
+		return true
+	else
+		return false
+	end
+end
+
+--зацикленая функция, пока робот не будет полнностью заряжен
+function checker_lib.check_energy_in_base()
+	local energy = computer.energy()
+	local energy2
+	local max_energy = computer.maxEnergy() - 2000
+	while energy < max_energy do
+		energy = computer.energy()
+		os.sleep(10)
+		energy2 = computer.energy()
+		if energy2 <= energy then
+			computer.beep(1200,1)
+			print("робот не заряжается. Проверь, есть ли энергия в сети")
+			os.sleep(3)
+		else
+			print("идет зарядка робота: " .. math.floor(energy).. " < " .. max_energy)
+		end		
+	end
+end
+
+return checker_lib
