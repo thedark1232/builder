@@ -17,6 +17,7 @@ local names_blocks = {} --а это сами названия блоков
 local all_block_in_chank = 0 --общее количество блоков в чанке
 local robot_height = 0 --определение высоты робота до пола
 local robot_slayer --вычисление последнего построенного слоя
+local how_many_werehouses --настраиваемое при старте проги, сколько своев склада вверх?
 local programm, file_programm_name, creat
 local navigate
 local geo = component.geolyzer
@@ -323,11 +324,14 @@ end
 --такики, как блоки досок. блоки шерсти и стекла разных цветов. Если имеет значение true, будет произведена проверка
 function return_and_find_item(block_name, meta, check_meta)
 	local sycle = 0
+	local wh_number = 1 --номер проверяемого склада
+	local posZ = 1
 	local pos_x, pos_z, pos_y = navigate.getPosition()
+	local reverse_move = false
 	return_on_start_position()
 	--проверка энергии
 	table_librarys["energyChecker"].check_energy_in_base()
-	table_librarys["moveLibrary"].z_move(start_position.z + 1)
+	table_librarys["moveLibrary"].z_move(start_position.z + posZ)
 	for rForward = 1,3 do
 		while geo.analyze(3).name == "OpenComputers:robot" do computer.beep(1000, 1); table_librarys["moveLibrary"].z_move(start_position.z + 2); term.clear(); print("на моем пути робот"); print("пытаюсь уступить дорогу"); weit_ten_seconds(); table_librarys["moveLibrary"].z_move(start_position.z + 1) end
 		table_librarys["moveLibrary"].x_y_move(start_position.x + rForward, start_position.y)
@@ -335,8 +339,14 @@ function return_and_find_item(block_name, meta, check_meta)
 	::next_check::
 	while geo.analyze(0).name ~= block_name do
 		table_librarys["moveLibrary"].x_y_move(start_position.x + 3, start_position.y + sycle)
-		sycle = sycle + 1
-		if geo.analyze(0).name == "minecraft:air" then --робот останавливает поиск, когда закончились блоки под ним
+		if reverse_move then sycle = sycle - 1 else sycle = sycle + 1 end
+		if geo.analyze(0).name == "minecraft:air" and wh_number ~= how_many_werehouses then
+			wh_number = wh_number + 1
+			posZ = posZ + 6
+			if reverse_move then reverse_move = false; sycle = sycle + 2 else reverse_move = true; sycle = sycle - 2 end
+			table_librarys["moveLibrary"].z_move(start_position.z + posZ)
+			table_librarys["moveLibrary"].x_y_move(start_position.x + 3, start_position.y + sycle)
+		elseif geo.analyze(0).name == "minecraft:air" and wh_number == how_many_werehouses then --робот останавливает поиск, когда закончились блоки под ним
 			while navigate.getFacing() ~= 4 do table_sides[4][navigate.getFacing()]() end --мордой на запад
 			while geo.analyze(1).name == "OpenComputers:robot" do repeat until robot.back() end --найти парковочное место для робота, в ожидании блока
 			repeat until robot.up()
@@ -368,7 +378,7 @@ function return_and_find_item(block_name, meta, check_meta)
 			move(start_position.x, start_position.y, start_position.z)
 			table_librarys["moveLibrary"].z_move(pos_z)
 			move(pos_x, pos_y, pos_z)
-			return
+			return	
 		end
 	end
 	--проверка на совпадение метаданных блока(проверяет, если только это блоки с одинаковым именем, но разными метаданными(доски, шерсть разных цветов, стекло разных цветов)
@@ -379,7 +389,7 @@ function return_and_find_item(block_name, meta, check_meta)
 			goto next_check
 		end
 	end
-	table_librarys["moveLibrary"].z_move(start_position.z + 2) --поднятся на блок выше к воронкам
+	table_librarys["moveLibrary"].z_move(start_position.z + posZ + 1) --поднятся на блок выше к воронкам
 	local slot_number = 0
 	while find_block(block_name, false, meta, false, false) == 0 do end
 	slot_number = find_block(block_name,  false, meta, false, false)
@@ -728,6 +738,13 @@ do
 	slayer = tostring(slayer)
 	--загрузка таблицы планок
 	table_planks = planks_table.build_pair()
+	--определение количества складов в постройке
+	term.clear()
+	print("определение количества складов с блоками:")
+	::repeat_choose::
+	how_many_werehouses = tonumber(io.read())
+	if how_many_werehouses == nil then term.clear(); print("не правильный выбор"); goto repeat_choose end
+	if how_many_werehouses < 1 then term.clear(); print("не правильный выбор"); goto repeat_choose end
 	--прочерка высоты робота до пола
 	file_robot_height()
 	for sl = sl_plus, allSlay do
