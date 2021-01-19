@@ -8,8 +8,9 @@ local librarys = {{"/usr/lib/energyChecker.lua","https://raw.githubusercontent.c
 				  {"/home/build","https://raw.githubusercontent.com/thedark1232/builder/main/build"},
 				  {"/home/werehouse","https://raw.githubusercontent.com/thedark1232/builder/main/werehouse"},
 				  {"/home/return", "https://raw.githubusercontent.com/thedark1232/builder/main/return"},
+				  {"/home/oldBuild", "https://raw.githubusercontent.com/thedark1232/builder/main/old_builder"},
 				  {"/usr/lib/table_planks.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/table_planks_rus"},
-				  {"/usr/lib/table_planks.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/table_planks_eng"}
+				  {"/usr/lib/table_planks.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/table_planks_eng"}  
 				}
 
 --дебаг, нажать энтер для продолжения
@@ -21,24 +22,24 @@ end
 
 do
 	filesystem.makeDirectory("/usr/lib/")
-	for i = 1, 7 do filesystem.remove(librarys[i][1]) end --удаление устаревших программ
+	for i = 1, 8 do filesystem.remove(librarys[i][1]) end --удаление устаревших программ
 	repeat
+		::try_again::
 		local slot = inv.getStackInInternalSlot(1)
 		if slot == nil then
 			deb_enter("положи гаечный ключ в первый слот робота")
+			goto try_again
 		else
 			if slot.name ~= "OpenComputers:wrench" then
 				deb_enter("положи гаечный ключ в первый слот робота")
 			else
 				if slot.label == "Ключ" then
-					os.execute("wget " ..librarys[7][2].. " " ..librarys[7][1])
-				else
 					os.execute("wget " ..librarys[8][2].. " " ..librarys[8][1])
+				else
+					os.execute("wget " ..librarys[9][2].. " " ..librarys[9][1])
 				end
 			end
 		end	
 	until inv.getStackInInternalSlot(1).name == "OpenComputers:wrench"
-	for i = 1,6 do os.execute("wget " ..librarys[i][2].. " " ..librarys[i][1]) end
-	
-
+	for i = 1,7 do os.execute("wget " ..librarys[i][2].. " " ..librarys[i][1]) end
 end
