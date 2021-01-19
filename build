@@ -384,7 +384,7 @@ function return_and_find_item(block_name, meta, check_meta)
 	--проверка на совпадение метаданных блока(проверяет, если только это блоки с одинаковым именем, но разными метаданными(доски, шерсть разных цветов, стекло разных цветов)
 	if check_meta then
 		if geo.analyze(0).metadata ~= meta then
-			table_librarys["moveLibrary"].x_y_move(start_position.x - 3, start_position.y + sycle)
+			table_librarys["moveLibrary"].x_y_move(start_position.x + 3, start_position.y + sycle)
 			sycle = sycle + 1
 			goto next_check
 		end
