@@ -116,29 +116,32 @@ function set_programm_name()
 		fileName = file:read("*a")
 		file:close()
 		file = io.open("ProgrammName","w")
+		print("УПРАВЛЕНИЕ СХЕМАМИ")
 		print("выбери действие:")
-		print("1 - открыть файл: " ..fileName)
-		print("2 - записать новый файл")
-		print("3 - выход")
-		print("4 - открыть файл без pcall(дебаг)")
+		print("1 - открыть схему: " ..fileName)
+		print("2 - записать новой схемы")
+		print("3 - скачать схему из инета")
+		print("4 - открыть схему без pcall(дебаг)")
+		print("0 - выход")
+		
 		local chose_mode = io.read()
 		if chose_mode == "1" then
 			print("ОТКРЫВАЮ")
 			local try, _ = pcall(try_load_data_base, fileName)
-			if not try then print("файл не найден, проверь в названии отсутствите ==> .lua"); file:write(fileName); file:close(); os.exit() end
+			if not try then print("схема не найдена, проверь в названии отсутствите ==> .lua"); file:write(fileName); file:close(); os.exit() end
 			file:write(fileName)
 			file:close()
 		elseif chose_mode == "2" then
 			fileSystem.remove("/home/robot_height.lua")
 			fileSystem.remove("/home/robot_slayer.lua")
-			print("введи название программы, - \"без использования .lua\"")
+			print("введи название схемы, - \"без использования .lua\"")
 			creat = io.read()
 			print("ищу файл: " .. creat)
 			try,_ = pcall(try_load_data_base, creat)
-			if not try then term.clear(); print("ФАЙЛ " ..creat.. " НЕ НАЙДЕН, проверь в название присутствите ==> .lua"); print("выход из программы"); file:write(fileName); file:close(); os.exit() end
+			if not try then term.clear(); print("схема " ..creat.. " не найдена, проверь в название отсутствие ==> .lua"); print("выход из программы"); file:write(fileName); file:close(); os.exit() end
 			file:write(creat)
 			file:close()
-		elseif chose_mode == "3" then
+		elseif chose_mode == "0" then
 			print("выход из программы")
 			file:write(fileName)
 			file:close()
@@ -146,14 +149,33 @@ function set_programm_name()
 		elseif chose_mode == "4" then
 			fileSystem.remove("/home/robot_height.lua")
 			fileSystem.remove("/home/robot_slayer.lua")
-			print("введи название программы, - \"без использования .lua\"")
+			print("введи название схемы, - \"без использования .lua\"")
 			creat = io.read()
 			print("ищу файл: " .. creat)
 			file:write(creat)
 			file:close()
 			programm = require(creat)
-			print("слава богам, файл успешно найден")
+			print("слава богам, схема успешно загружена")
+			deb_enter()
+		elseif chose_mode == "3" then
+			local build_dir_name, build_dir_num
+			local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower"}
+			fileSystem.remove("/home/robot_height.lua")
+			fileSystem.remove("/home/robot_slayer.lua")
+			term.clear()
+			print("ВЫБОР ПОСТРОЙКИ:")
+			for k,v in ipairs(build_dir_table) do print(k .. ": " ..v) end
+			build_dir_num = pcall_return_num(1, #build_dir_table, num)
+			::again_name::
+			print("введи номер схемы"); local build_name = io.read()
+			os.execute("wget https://raw.githubusercontent.com/thedark1232/" ..build_dir_table[build_dir_num].. "/main/" ..build_name.. " /usr/lib/"..build_name..".lua")
+			local a,b = pcall(function() require(build_name).build_pair() end)
+			if not a then fileSystem.remove("/usr/lib/" ..build_name..".lua"); goto again_name end
+			file:write(build_name)
+			programm = require(build_name)
+			file:close()
 		else
+			term.clear()
 			print("неизвестное действие, программа завершена")
 			file:write(fileName)
 			file:close()
@@ -161,6 +183,16 @@ function set_programm_name()
 		end
 	end
 end
+--ввод цифры с проверками
+function pcall_return_num(min_num, max_num, num)
+	::again_choose::
+	io.write("ввод числа -> ")
+	local number = tonumber(io.read()) or 0
+	if number == nil then io.write("ошибка ввода. "); computer.beep(1000,1); goto again_choose end
+	if number < min_num or number > max_num then io.write("ошибка ввода. "); computer.beep(1000,1); goto again_choose end
+	return number
+end
+
 --защищенная функция для открытия файла
 function try_load_data_base(name)
 	programm = require(name)
