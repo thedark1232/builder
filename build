@@ -841,7 +841,7 @@ do
 		--таблица опастных блоков находится в начале кода(в разделе таблиц)
 		--вносить туда блоки, который робот должен игнорироватть при стройке
 		local programm_t_slayer_name_i = programm_t[slayer].name[i]
-		if dange_blocks[programm_t_slayer_name_i] == nil then
+		if danger_blocks[programm_t_slayer_name_i] == nil then
 			if programm_t_slayer_name_i == "minecraft:double_wooden_slab" then programm_t[slayer].name[i] = table_planks[1]; it_is_double = true; wood = "wooden" end --двойные плиты из дерева меняет на доски
 			if programm_t_slayer_name_i == "minecraft:double_stone_slab" then programm_t[slayer].name[i] = table_planks[2]; it_is_double = true; wood = "stone" end --двойне плиты из камня меняет на каменные кирпичи
 			if programm_t_slayer_name_i == table_planks[1] then it_is_planks = true; wood = "wooden" end
