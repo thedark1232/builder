@@ -24,6 +24,12 @@ end
 do
 	filesystem.makeDirectory("/usr/lib/")
 	for _, v in pairs(librarys) do filesystem.remove(v[1]) end --удаление устаревших программ
+	if inv.getStackInInternalSlot(1) ~= nil then --перемещение гаечного ключа из второго слота робота, если он там есть
+		if inv.getStackInInternalSlot(1).name == "OpenComputers:wrench" then
+			robot.select(1)
+			robot.transferTo(1)
+		end
+	end
 	::try_again::
 	local check_slot --проверочный первый слот робота	
 	if inv.getStackInInternalSlot(1) == nil then deb_enter("положи гаечный ключ в первый слот робота"); goto try_again end
