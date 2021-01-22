@@ -24,9 +24,9 @@ end
 do
 	filesystem.makeDirectory("/usr/lib/")
 	for _, v in pairs(librarys) do filesystem.remove(v[1]) end --удаление устаревших программ
-	if inv.getStackInInternalSlot(1) ~= nil then --перемещение гаечного ключа из второго слота робота, если он там есть
-		if inv.getStackInInternalSlot(1).name == "OpenComputers:wrench" then
-			robot.select(1)
+	if inv.getStackInInternalSlot(2) ~= nil then --перемещение гаечного ключа из второго слота робота, если он там есть
+		if inv.getStackInInternalSlot(2).name == "OpenComputers:wrench" then
+			robot.select(2)
 			robot.transferTo(1)
 		end
 	end
