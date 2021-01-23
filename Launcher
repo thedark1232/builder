@@ -37,8 +37,10 @@ do
 	if check_slot.name ~= "OpenComputers:wrench" then deb_enter("положи гаечный ключ в первый слот робота"); goto try_again end
 	if robot.count(2) == 0 then robot.select(1); robot.transferTo(2) end
 	if check_slot.label == "Ключ" then
+		deb_enter("установка рус версии планок")
 		os.execute("wget " ..librarys["table_planks_rus"][2].. " " ..librarys["table_planks_rus"][1])
 	else
+		deb_enter("установка eng версии планок")
 		os.execute("wget " ..librarys["table_planks_eng"][2].. " " ..librarys["table_planks_eng"][1])
 	end
 	
