@@ -58,7 +58,7 @@ local table_wool = {[0] = "белая шерсть", [1] = "оранжевая �
 local danger_blocks = {["minecraft:stone_button"] = "каменная кнопка",
 			["minecraft:tallgrass"] = "высокая трава",
 			["minecraft:lever"] = "рычаг",
-			["OpenComputers:capasitor"] = "OpenComputers:capasitor",
+			["OpenComputers:capacitor"] = "OpenComputers:capacitor",
 			["minecraft:redstone_wire"] = "minecraft:redstone_wire",
 			["minecraft:snow_layer"] = "слой снега",
 			["minecraft:piston_extension"] = "minecraft:piston_extension"}
