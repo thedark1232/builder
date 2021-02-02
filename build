@@ -39,7 +39,7 @@ local g_key = "OpenComputers:wrench" --гаечный ключ
 local wooden_slab = "minecraft:wooden_slab" --ступеньки из дерева
 local stone_slab = "minecraft:stone_slab" --ступеьки из камня
 --таблица ступенек
-local table_stairs = {[1] = "minecraft:stone_brick_stairs", [2] = "minecraft:stone_stairs", [3] = "minecraft:brick_stairs", [4] = "minecraft:spruce_stairs", [5] = "minecraft:oak_stairs", [6] = "minecraft:birch_stairs", [7] = "minecraft:jungle_stairs", [8] = "minecraft:acacia_stairs", [9] = "minecraft:dark_oak_stairs", [10] = "minecraft:quartz_stairs", [11] = "minecraft:nether_brick_stairs", [12] = "minecraft:sandstone_srairs"}
+local table_stairs = {[1] = "minecraft:stone_brick_stairs", [2] = "minecraft:stone_stairs", [3] = "minecraft:brick_stairs", [4] = "minecraft:spruce_stairs", [5] = "minecraft:oak_stairs", [6] = "minecraft:birch_stairs", [7] = "minecraft:jungle_stairs", [8] = "minecraft:acacia_stairs", [9] = "minecraft:dark_oak_stairs", [10] = "minecraft:quartz_stairs", [11] = "minecraft:nether_brick_stairs", [12] = "minecraft:sandstone_stairs"}
 							--         каменные ступеньки,        ступеньки из булыжника          кирпичные ступеньки             еловые ступеньки                  дубовые ступеньки		       березовые ступеньки             тропические ступеньки             тупеньки из акации             ступеньки из тёмного дуба             кварцевые ступеньки                   адские ступеньки					ступеньки из песчаника
 --таблица планок
 local it_is_double = false
