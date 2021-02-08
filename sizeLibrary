@@ -7,6 +7,7 @@ local robot = require("robot")
 
 -- возвращает таблицу, в какую сторону роботу необходимо повернуться
 --move_size_table[нужная сторона][сторона, на которой находится робот]
+-- N = 2, S = 3, W = 4, E = 5
 function size_table_library.build_pair_sizes()
 	local move_size_table = {}
 	local i
