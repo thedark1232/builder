@@ -3,7 +3,8 @@
 --v 1.0
 local checker_lib = {}
 
-local computer = require("computer")
+local computer = require "computer"
+local term = require "term"
 
 --аргумент нужен для определения минимального количество энергии, при котором функция вернет true
 function checker_lib.how_much_enegry(energy_min)
@@ -22,13 +23,14 @@ function checker_lib.check_energy_in_base()
 	local max_energy = computer.maxEnergy() - 2000
 	while energy < max_energy do
 		energy = computer.energy()
-		os.sleep(10)
+		os.sleep(3)
 		energy2 = computer.energy()
 		if energy2 <= energy then
-			computer.beep(1200,1)
+			term.clear()
 			print("робот не заряжается. Проверь, есть ли энергия в сети")
-			os.sleep(3)
+			computer.beep(1200,1)
 		else
+			term.clear()
 			print("идет зарядка робота: " .. math.floor(energy).. " < " .. max_energy)
 		end		
 	end
