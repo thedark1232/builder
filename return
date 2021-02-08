@@ -1,32 +1,69 @@
 --возврат робота на стартовую позицию
 local robot = require("robot")
 local moveLibrary = require("moveLibrary")
-local component = require("component")
+component = require("component")
 local computer = require("computer")
 local term = require("term")
-
-local navigate = component.navigation
-
+local navigate
 local file, file_text
 local creat_coords = false
 local mode_number
-local x,y,z
-
+local x, y, z
+local components_and_librarys = {} --таблица проверки компонентов и библиотек перед загрузкой
+--создание и запись файла с координатами робота. Расположение файла /home/MyCoords
 function creat_file()
 	file = io.open("MyCoords","w")
-	x,z,y = navigate.getPosition()
-	file:write(x.."\n")
-	file:write(y.."\n")
-	file:write(z.."\n")
+	x, z, y = navigate.getPosition()
+	file:write(x.."\n"); file:write(y.."\n"); file:write(z.."\n")	
 	file:close()
 	term.clear()
-	computer.beep(1000,0.1)
-	computer.beep(1000,0.1)
-	computer.beep(1000,0.1)
+	computer.beep(1000,0.1); computer.beep(1000,0.1); computer.beep(1000,0.1)
 	print("КООРДИНАТЫ ПОЗИЦИИ РОБОТА СОХРАНЕНЫ. ПРИ СЛЕДУЮЩЕМ ОТКРЫТИИ ФАЙЛА, РОБОТ ПОЕДЕТ НА ЭТИ КООРДИНАТЫ")
 end
+--возвращает таблицу компонента при удачной загрузке(если этот компонент присутствует), при неудаче завершает работу программы
+function components_and_librarys.getComponent(name)
 
+	local arg1, arg2
+	local component_name = "return component." ..name
+	local func = load(component_name)
+	arg1, arg2 = pcall(func)
+	if arg1 then
+		return arg2
+	else
+		term.clear()
+		print("при поиске компонента: " ..name)
+		print("ПРОИЗОШЛА ОШИБКА")
+		deb_enter("будет произведена повторная проверка")
+		return 0
+	end
+end
+--дебаг, нажать энтер для продолжения
+local function deb_enter(what_text)
+	if what_text == nil then what_text = "имеет значение nil" end
+	print(what_text)
+	print("жми ентер для продолжения")
+	local lol_enter = io.read()
+end
+
+--пробует загрузить библиотку, если библиотека не найдена, завершит работу программы
+function components_and_librarys.getLibrary(name)
+	local arg1, arg2
+	local library_name = "return require(\"" ..name.. "\")"
+	local func = load(library_name)
+	arg1, arg2 = pcall(func)
+	if arg1 then
+		return arg2
+	else
+		term.clear()
+		print("при поиске библиотеки: " ..name)
+		print("ПРОИЗОШЛА ОШИБКА")
+		deb_enter("будет сделан ребут робота") --не переписывай ребут...
+		computer.shutdown(true)
+	end
+end
 do
+	repeat navigate = components_and_librarys.getComponent("navigation") until navigate ~= 0
+	moveLibrary = components_and_librarys.getLibrary("moveLibrary")
 	file = io.open("MyCoords")
 	if file == nil then
 		print("ВОЗВРАЩАТЬ РОБОТА НА ЭТУ ПОЗИЦИЮ? 1 = ДА, 2 = НЕТ")
@@ -39,6 +76,7 @@ do
 		end
 	else
 		print("ВЫДВИЖЕНИЕ НА СТАРТОВУЮ ПОЗИЦИЮ? 1 = ДА, 0 = ПЕРЕЗАПИСАТЬ ФАЙЛ НА ТЕКУЩУЮ ПОЗИЦИЮ")
+		::again_choose::
 		mode_number = tonumber(io.read())
 		if mode_number == 1 then
 				local ln = {}
@@ -51,6 +89,9 @@ do
 			creat_file()
 			print("ФАЙЛ ПЕРЕСОЗДАН")
 			os.exit()
+		else
+			computer(400, 0.1)
+			print("не корректный ввод")
 		end
 	end
 	if mode_number == 1 then
