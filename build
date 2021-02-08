@@ -591,71 +591,55 @@ end
 ------------------------------------------------------------------------------------------------------------------------------
 --ставит ступеньки в мир (метадата_ступенек, номер_слота_ступенек, номер_слота_гаечного_ключа)
 function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
-	local analBlockName
-	--deb_enter("номер слота ступенек: " ..stairs_slot_num.. " номер_слота_ключа " ..g_key_slot_num)
-	--local to_first_slot = 1
-	if stairs_slot_num == 0 or stairs_slot_num == nil then
-		term.clear()
-		print("не могу найти ступеньки в инвентаре")
-		computer.beep(400, 1)
-		deb_enter("возвращение на стартовую позицию")
-		return_on_start_position()
+	--deb("номер слота ступенек: " ..stairs_slot_num.. " номер_слота_ключа " ..g_key_slot_num)
+	--print("энтер для продолжения")
+	--local ennn = io.read()
+	local to_first_slot = 1
+	if stairs_slot_num == 0 then
+		print("не могу найти ступеньки")
 		print("программа завершена")
 		os.exit()
 	end
 	local _,z,_ = navigate.getPosition()
 	if metadata >= 4 then
-		--deb_enter("ставлю обычные ступеньки")
-		--moveLibrary.z_move(z - 1)
-		--first_slot_transfer() --переложить предмет из первого слота в любой другой
-		-- robot.select(to_first_slot)
-		-- inv.equip() 		  --проверить, нет ли предмета в руке робота
-		-- first_slot_transfer() --переложить еще раз предмет из первого слота, если он там есть
+		first_slot_transfer() --переложить предмет из первого слота в любой другой
+		robot.select(to_first_slot)
+		inv.equip() 		  --проверить, нет ли предмета в руке робота
+		first_slot_transfer() --переложить еще раз предмет из первого слота, если он там есть
 		robot.select(stairs_slot_num)
-		--robot.transferTo(to_first_slot)
+		robot.transferTo(to_first_slot)
 		::try_again2::
-		robot.placeDown()
-		computer.beep(400, 0.1)
-		computer.beep(1000, 0.1)
-		computer.beep(400, 0.1)
-		computer.beep(1000, 0.1)
-		analBlockName = geo.analyze(0).name
-		if analBlockName == "minecraft:air" or analBlockName == "Thaumcraft:blockAiry" then computer.beep(400, 2); deb("ЖДУ 10 СЕКУНД"); goto try_again2 end
-		computer.beep(1000, 0.1)
-		robot.select(g_key_slot_num)
-		inv.equip()
-		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
-		--moveLibrary.z_move(z)
-		inv.equip()
-	else
-		--print("ставлю перевернутые ступеньки")
-		--deb_enter("поднимаюсь на 1 блок выше")
-		moveLibrary.z_move(z + 1)
-		--deb_enter("выбираю слот со ступеньками")
-		robot.select(stairs_slot_num)
-		--deb_enter("беру его в руку")
-		inv.equip()
-		::try_again2::
-		--deb_enter("ствлю в мир")
 		robot.useDown()
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
-		--deb_enter("двинаюсь на блок вниз")
-		moveLibrary.z_move(z)
-		analBlockName = geo.analyze(0).name
-		if analBlockName == "minecraft:air" or analBlockName == "Thaumcraft:blockAiry" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("жду 10 секунд") goto try_again2 end
+		local geoAnalyze = geo.analyze(0).name
+		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" then computer.beep(400, 2); deb("ЖДУ 10 СЕКУНД"); goto try_again2 end
 		computer.beep(1000, 0.1)
-		--deb_enter("убираю блок из руки")
-		inv.equip()
-		--deb_enter("выбираю слот с ключем")
 		robot.select(g_key_slot_num)
-		--deb_enter("беру ключ в руку")
 		inv.equip()
 		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
-		--moveLibrary.z_move(z)
-		--deb_enter("убираю ключ из руки")
+		inv.equip()
+	else
+		moveLibrary.z_move(z + 1)
+		robot.select(stairs_slot_num)
+		inv.equip()
+		::try_again2::
+		robot.useDown()
+		computer.beep(400, 0.1)
+		computer.beep(1000, 0.1)
+		computer.beep(400, 0.1)
+		computer.beep(1000, 0.1)
+		moveLibrary.z_move(z)
+		local geoAnalyze2 = geo.analyze(0).name
+		if geoAnalyze2 == "minecraft:air" or getoAnalyze2 == "Thaumcraft:blockAiry" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("жду 10 секунд") goto try_again2 end
+		computer.beep(1000, 0.1)
+		inv.equip()
+		robot.select(g_key_slot_num)
+		inv.equip()
+		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
+		moveLibrary.z_move(z)
 		inv.equip()
 	end
 end
@@ -688,71 +672,57 @@ function build_planks(it_is_down, it_is_bouble)
 	if it_is_down and it_is_bouble == false then
 		inv.equip()
 		::build_again::
-		--deb_enter("поднимаюсь на блок выше")
-		moveLibrary.z_move(mov_z + 1)
-		--deb_enter("ставлю планку с самого низу")
-		robot.useDown()	
+		moveLibrary.z_move(mov_z + 1)	
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
+		robot.useDown()
 		moveLibrary.z_move(mov_z)
-		--deb_enter("проверка поставленной планки под роботом")
 		local geoAnalyze = geo.analyze(0).name
-		if  geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" then
+		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" then
 			computer.beep(400, 2)
 			deb("ЖДУ 10 СЕК")
 			goto build_again
 		end
 		computer.beep(1000, 0.1)
+		moveLibrary.z_move(mov_z)
 		inv.equip()
-		--deb_enter("функция завершена")
 	--ставит двойные планки
 	elseif it_is_bouble	then
 		if wood == "wooden" then stone_or_wood = "minecraft:double_wooden_slab" else stone_or_wood = "minecraft:double_stone_slab" end
-		print("ставлю двойные планки")
-		--deb_enter("ставлю первую планку")
-		
 		inv.equip()
-		::build_again2::
 		moveLibrary.z_move(mov_z + 1)
-		robot.useDown()
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
-		--deb_enter("ставлю вторую планку")
-		robot.useDown()
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
+		robot.useDown()
+		::build_again2::
+		robot.useDown()
 		moveLibrary.z_move(mov_z)
-		--deb_enter("проверяю на совпадение поставленных планок")
 			if geo.analyze(0).name ~= stone_or_wood then
-				--deb_enter("планки не совпали")
+				moveLibrary.z_move(mov_z + 1)
 				computer.beep(400, 2)
 				deb("ЖДУ 10 СЕК")
 				goto build_again2
 			end
 		computer.beep(1000, 0.1)
+		moveLibrary.z_move(mov_z)
 		inv.equip()
-		--deb_enter("функция завершена")
 	--ставит планки сверху
 	else
+		robot.transferTo(1)
+		--moveLibrary.z_move(mov_z - 1)
 		::build_again3::
-		--deb_enter("ставлю планки в мир robot.useDown()")
-		robot.placeDown()
-		computer.beep(400, 0.1)
-		computer.beep(1000, 0.1)
-		computer.beep(400, 0.1)
-		computer.beep(1000, 0.1)
-		--deb_enter("сверяю, поставились ли планки")
+		robot.useDown()
 		local geoAnalyze2 = geo.analyze(0).name
-		if  geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" then
-			--deb_enter("планки не поставились")
+		if geoAnalyze2 == "minecraft:air" or getoAnalyze2 == "Thaumcraft:blockAiry" then
 			computer.beep(400, 2)
 			deb("ЖДУ 10 СЕК")
 			goto build_again3
 		end
-		computer.beep(1000, 0.1)
-		--deb_enter("функция завершена")
+		first_slot_transfer()
 	end
 end
 --возвращение на базу в поисках предмета, если его не оказалось в инвентаре, затем возвращение обратно на поле.
