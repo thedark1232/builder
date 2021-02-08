@@ -11,7 +11,7 @@ local planks_table
 local test_game_mode = false --если включен тестовый мод, то робот не будет проверять энергию
 --------------------------------------------------------------------------------------------
 --названия парок построек из гитхаба
-local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel"}
+local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1"}
 --------------------------------------------------------------------------------------------
 local done_load = false --первоначальная проверка загружаемых библиотек
 local pair_count  = 0 --количество своев в таблице, высчитывается при стартовых проверках
