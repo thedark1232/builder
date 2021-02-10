@@ -10,8 +10,24 @@ local planks_table
 --------------------------------------------------------------------------------------------
 local test_game_mode = false --если включен тестовый мод, то робот не будет проверять энергию
 --------------------------------------------------------------------------------------------
---названия парок построек из гитхаба
-local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1"}
+--названия папок построек из гитхаба
+local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2"}
+--таблица опасных блоков(можно дополнять блоками, который робот будет игнорировать), в других местах код менять не надо
+local danger_blocks = {["minecraft:stone_button"] = "каменная кнопка",
+			["minecraft:tallgrass"] = "высокая трава",
+			["minecraft:lever"] = "рычаг",
+			["OpenComputers:capacitor"] = "OpenComputers:capacitor",
+			["minecraft:redstone_wire"] = "minecraft:redstone_wire",
+			["minecraft:snow_layer"] = "слой снега",
+			["minecraft:piston_extension"] = "minecraft:piston_extension",
+			["minecraft:wooden_pressure_plate"] = "(игнорируется) дерев. нажим. плита",
+			["minecraft:snow_slab"] = "(игнорируется)snow_slab",
+			["minecraft:wooden_door"] = "(игнорируется) деревянная дверь",
+			["minecraft:skull"] = "(игнорируется) череп",
+			["minecraft:water"] = "вода"
+      }
+--игнорируемые файлы при составлении списка схем для удаления
+local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok"}
 --------------------------------------------------------------------------------------------
 local done_load = false --первоначальная проверка загружаемых библиотек
 local pair_count  = 0 --количество своев в таблице, высчитывается при стартовых проверках
@@ -58,14 +74,6 @@ local table_hardened_clay = {[0] = "белая обож. глина", [1] = "о�
 local table_hardened_glass = {[0] = "белое стекло", [1] = "оранжевое стекло", [2] = "пурпурное стекло", [3] = "голубое стекло", [4] = "желтое стекло", [5] = "лаймовое стекло", [6] = "розовое стекло", [7] = "серое стекло", [8] = "светло-серое стекло", [9] = "бирюзовое стекло", [10] = "фиолетовое стекло", [11] = "синее стекло", [12] = "коричневое стекло", [13] = "зеленое стекло", [14] = "красное стекло", [15] = "черное стекло"}
 local table_hardened_glass_pane = {[0] = "белая стекл. панель", [1] = "оранжевая стекл. панель", [2] = "пурпурная стекл. панель", [3] = "голубая стекл. панель", [4] = "желтая стекл. панель", [5] = "лаймовая стекл. панель", [6] = "розовая стекл. панель", [7] = "серая стекл. панель", [8] = "светло-серая стекл. панель", [9] = "бирюзовая стекл. панель", [10] = "фиолетовая стекл. панель", [11] = "синяя стекл. панель", [12] = "коричневая стекл. панель", [13] = "зеленая стекл. панель", [14] = "красная стекл. панель", [15] = "черная стекл. панель"}
 local table_wool = {[0] = "белая шерсть", [1] = "оранжевая шерсть", [2] = "пурпурная шерсть", [3] = "голубая шерсть", [4] = "желтая шерсть", [5] = "лаймовая шерсть", [6] = "розовая шерсть", [7] = "серая шерсть", [8] = "светло-серая шерсть", [9] = "бирюзовая шерсть", [10] = "фиолетовая шерсть", [11] = "синяя шерсть", [12] = "коричневая шерсть", [13] = "зеленая шерсть", [14] = "красная шерсть", [15] = "черная шерсть"}
---таблица опасных блоков(можно дополнять блоками, который робот будет игнорировать), в других местах код менять не надо
-local danger_blocks = {["minecraft:stone_button"] = "каменная кнопка",
-			["minecraft:tallgrass"] = "высокая трава",
-			["minecraft:lever"] = "рычаг",
-			["OpenComputers:capacitor"] = "OpenComputers:capacitor",
-			["minecraft:redstone_wire"] = "minecraft:redstone_wire",
-			["minecraft:snow_layer"] = "слой снега",
-			["minecraft:piston_extension"] = "minecraft:piston_extension"}
 ------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------РАБОТА С КОМПОНЕНТАМИ-----------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
@@ -170,19 +178,24 @@ function file_robot_height()
 		file_p = io.open(file_name,"w") --создать файл в режиме записи
 		--запись параметров в файл
 		robot_height = robot_go_down()
-		file_p:write(robot_height) --не забыть поставить в конце \n
+		file_p:write(robot_height)
+		file_p:close(); return
 	else --ФАЙЛ СУЩЕСТВУЕТ
 		local r = file_p:read()
 		if r == nil then --ФАЙЛ ПУСТОЙ
 			file_p:close()
 			file_p = io.open(file_name,"w") --создать файл в режиме записи
 			robot_height = robot_go_down()
-			file_p:write(robot_height) --не забыть поставить в конце \n
+			file_p:write(robot_height)
+			file_p:close(); return
 		else --В ФАЙЛЕ ЕСТЬ ДАННЫЕ
 			robot_height = robot_go_down(tonumber(r))
+			file_p:close()
+			file_p = io.open(file_name,"w") --создать файл в режиме записи
+			file_p:write(robot_height)
+			file_p:close(); return
 		end
 	end
-	file_p:close() --закрыть файл после всех операций
 end
 --фунция перезаписи файла первоначальных координат
 function creat_file()
@@ -282,55 +295,81 @@ function scheme_menu()
 		file:close()
 		file = io.open("ProgrammName","w")
 		                        --▀ █ ▄--
-	print("█▀▀▀▀▀▀▀▀▀▀▀▀▀ УПРАВЛЕНИЕ  СХЕМАМИ: ▀▀▀▀▀▀▀▀▀▀▀▀▀█")
-	print("█  1 - открыть схему: " ..fileName .."           █") --тут надо динамично менять правую рамку
-	print("█  2 - записать новой схемы                      █")
-	print("█  3 - скачать схему из инета                    █")
-	print("█  4 - открыть схему без pcall(дебаг)            █")
-	print("█  0 - выход                                     █")
-	print("█▄▄▄▄▄▄▄▄▄▄ СОДЕРЖИМОЕ ПАПКИ /usr/lib/ ▄▄▄▄▄▄▄▄▄▄█")
-	print("█  5  -                                          █")
-	print("█  6  -                                          █")
-	print("█  7  -                                          █")
-	print("█  8  -                                          █")
-	print("█  9  -                                          █")
-	print("█  10 -                                          █")
-	print("█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█                          █")
-	print("█                     █                          █")
-	io.write("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█")
-	term.setCursor(3, 15)
+	   print("█▀▀▀▀▀▀▀▀▀▀▀▀▀ УПРАВЛЕНИЕ  СХЕМАМИ: ▀▀▀▀▀▀▀▀▀▀▀▀▀█")
+	   print("█  1 - загрузка схемы:")
+	   print("█  2 - записать новой схемы                      █")
+	   print("█  3 - скачать схему из инета                    █")
+	   print("█  4 - открыть схему без pcall(дебаг)            █")
+	   print("█  0 - выход                                     █")
+	   print("█▄▄▄▄▄▄▄▄▄▄ СОДЕРЖИМОЕ ПАПКИ /usr/lib/ ▄▄▄▄▄▄▄▄▄▄█")
+	   print("█                                                █")
+	   print("█                                                █")
+	   print("█                                                █")
+	   print("█                                                █")
+	   print("█                                                █")
+	   print("█                                                █")
+	   print("█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█")
+	   print("█                                                █")
+	io.write("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█")
+	term.setCursor(23, 2)
+	io.write(fileName)
+	term.setCursor(50, 2)
+	io.write("█")
+	--проверка папки /usr/lib/ на наличии схем для удаления
+	local all_schems = {}
+	for scheme in fileSystem.list("/usr/lib/") do
+		if ignore_files[scheme] == nil then all_schems[#all_schems + 1] = scheme end
+	end
+	::chooseAgain::
+	for cl = 8, 13 do clear_input_window(2, cl) end
+	for k, v in ipairs(all_schems) do
+		if k < 7 then
+			term.setCursor(3, k + 7)
+			io.write(k + 4 .. " - " .. v)
+		end
+	end
+	clear_input_window(3, 15); term.setCursor(3, 15)
 	io.write("ВВОД -> ")
 		local chose_mode = io.read()
+		if chose_mode == "5" or chose_mode == "6" or chose_mode == "7" or chose_mode == "8" or chose_mode == "9" or chose_mode == "10" then
+			all_schems = delete_scheme(tonumber(chose_mode), all_schems)
+			goto chooseAgain
+		end
 		if chose_mode == "1" then
-			print("ОТКРЫВАЮ")
+			clear_input_window(3, 15); term.setCursor(3, 15)
+			io.write("ЗАГРУЗКА... ОБОЖДИ")
 			local try, _ = pcall(function() programm_t = require(fileName).build_pair() end)
-			if not try then print("схема не найдена, проверь в названии отсутствите ==> .lua"); file:write(fileName); file:close(); os.exit() end
+			if not try then term.clear(); print("ОШИБКА ПРИ ОТКРЫТИЕ ФАЙЛА..."); computer.beep(400, 1); file:write(fileName); file:close(); os.exit() end
 			file:write(fileName)
 			file:close()
 		elseif chose_mode == "2" then
 			fileSystem.remove("/home/robot_slayer.lua")
-			print("введи название схемы, - \"без использования .lua\"")
+			clear_input_window(3, 15); term.setCursor(3, 15); io.write("введи название схемы ->                        █"); term.setCursor(27, 15)
 			creat = io.read()
-			print("ищу файл: " .. creat)
+			clear_input_window(3, 15); term.setCursor(3, 15); io.write("ищу файл: " .. creat)
 			try, _ = pcall(function() programm_t = require(creat).build_pair() end)
 			if not try then term.clear(); print("схема " ..creat.. " не найдена, проверь в название отсутствие ==> .lua"); print("выход из программы"); file:write(fileName); file:close(); os.exit() end
 			file:write(creat)
 			file:close()
 		elseif chose_mode == "0" then
+			term.clear()
 			print("выход из программы")
 			file:write(fileName)
 			file:close()
 			os.exit()
 		elseif chose_mode == "4" then
 			fileSystem.remove("/home/robot_slayer.lua")
-			print("введи название схемы, - \"без использования .lua\"")
+			clear_input_window(3, 15); term.setCursor(3, 15)
+			io.write("введи название схемы -> ")
 			creat = io.read()
-			print("ищу файл: " .. creat)
+			clear_input_window(3, 15); term.setCursor(3, 15)
+			io.write("ищу файл: " .. creat)
 			file:write(creat)
 			file:close()
 			programm_t = require(creat).build_pair()
-			print("слава богам, схема успешно загружена")
-			deb_enter()
+			clear_input_window(3, 15); term.setCursor(3, 15)
+			io.write("Схема успешно загружена. Жми любую кнопку... ")
+			local delete = io.read()
 		elseif chose_mode == "3" then
 			local build_dir_name, build_dir_num
 			fileSystem.remove("/home/robot_height.lua")
@@ -350,6 +389,7 @@ function scheme_menu()
 		else
 			term.clear()
 			print("неизвестное действие, программа завершена")
+			computer.beep(400, 2)
 			file:write(fileName)
 			file:close()
 			os.exit()
@@ -402,7 +442,9 @@ function robot_go_down(value_height)
 			if  anal_down ~= "minecraft:air" then --робот останавливает поиск, когда ему встречается блок на пути
 				if anal_down ~= "Thaumcraft:blockAiry" then
 					if anal_down ~= "OpenComputers:robot" then
-						return r_height
+						if anal_down ~= "minecraft:water" then
+							return r_height
+						end
 					end
 				end
 			end
@@ -415,6 +457,22 @@ function robot_go_down(value_height)
 		term.clear()
 		deb_enter("бля, заебал.. вводи цифру нормально!!"); os.exit()
 	end
+end
+--очищает выбранную строку в информационном окошке робота
+function clear_input_window(x, y)
+	term.setCursor(x, y)
+	x = 48 - x
+	for i = 1, x do
+		io.write(" ")
+	end
+end
+--удаление определенного поля со схемой:вовращает таблицу с оставшимися схемами
+function delete_scheme(choose_number, scheme_table)
+	local t_num = choose_number - 4
+	local del_line = choose_number + 3
+	fileSystem.remove("/usr/lib/" ..scheme_table[t_num])
+	if scheme_table[t_num] ~= nil then table.remove(scheme_table, t_num) end
+	return scheme_table
 end
 ------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------ФУНКЦИИ РАБОТЫ С ИНВЕНТАРЕМ РОБОТА-------------------------------------------------
@@ -615,7 +673,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
 		local geoAnalyze = geo.analyze(0).name
-		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" then computer.beep(400, 2); deb("ЖДУ 10 СЕКУНД"); goto try_again2 end
+		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" then computer.beep(400, 2); deb("ЖДУ 10 СЕКУНД"); goto try_again2 end
 		computer.beep(1000, 0.1)
 		robot.select(g_key_slot_num)
 		inv.equip()
@@ -633,7 +691,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		computer.beep(1000, 0.1)
 		moveLibrary.z_move(z)
 		local geoAnalyze2 = geo.analyze(0).name
-		if geoAnalyze2 == "minecraft:air" or getoAnalyze2 == "Thaumcraft:blockAiry" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("жду 10 секунд") goto try_again2 end
+		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("жду 10 секунд") goto try_again2 end
 		computer.beep(1000, 0.1)
 		inv.equip()
 		robot.select(g_key_slot_num)
@@ -680,7 +738,7 @@ function build_planks(it_is_down, it_is_bouble)
 		robot.useDown()
 		moveLibrary.z_move(mov_z)
 		local geoAnalyze = geo.analyze(0).name
-		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" then
+		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" then
 			computer.beep(400, 2)
 			deb("ЖДУ 10 СЕК")
 			goto build_again
@@ -717,7 +775,7 @@ function build_planks(it_is_down, it_is_bouble)
 		::build_again3::
 		robot.useDown()
 		local geoAnalyze2 = geo.analyze(0).name
-		if geoAnalyze2 == "minecraft:air" or getoAnalyze2 == "Thaumcraft:blockAiry" then
+		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" then
 			computer.beep(400, 2)
 			deb("ЖДУ 10 СЕК")
 			goto build_again3
@@ -930,11 +988,10 @@ do
 		end
 		try_numbers =  try_numbers + 1
 	until find_something("OpenComputers:wrench") ~= 0
-	--сохранение всех блоков в роботе в таблицу
-	save_all_blocks_from_inventory_in_table()
 	--проверка высоты от робота до пола
 	file_robot_height()
-	
+	--сохранение всех блоков в роботе в таблицу
+	save_all_blocks_from_inventory_in_table()
 -------------------------------------------------------------ЦИКЛ СТРОИТЕЛЬСТВА-------------------------------------------------------------
 	for sl = sl_plus, allSlay do
 		slayer = tostring(sl)
