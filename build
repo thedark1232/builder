@@ -238,8 +238,8 @@ function open_main_menu()
 	elseif chose_num == 1 then term.clear(); scheme_menu()
 	elseif chose_num == 2 then local mult1 = multi(); moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x, my_y - mult1, my_z); term.clear(); creat_file(); goto try_again5
 	elseif chose_num == 3 then local mult2 = multi(); moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x, my_y + mult2, my_z); term.clear(); creat_file(); goto try_again5
-	elseif chose_num == 4 then local mult3 = multi(); moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x - mult3, my_y3, my_z); term.clear(); creat_file(); goto try_again5
-	elseif chose_num == 5 then local mult4 = multi(); moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x + mult4, my_y4, my_z); term.clear(); creat_file(); goto try_again5
+	elseif chose_num == 4 then local mult3 = multi(); moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x - mult3, my_y, my_z); term.clear(); creat_file(); goto try_again5
+	elseif chose_num == 5 then local mult4 = multi(); moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x + mult4, my_y, my_z); term.clear(); creat_file(); goto try_again5
 	elseif chose_num == 6 then moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x - 16, my_y - 16, my_z); term.clear(); creat_file(); goto try_again5
 	elseif chose_num == 7 then moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x + 16, my_y - 16, my_z); term.clear(); creat_file(); goto try_again5
 	elseif chose_num == 8 then moveLibrary.moveOut(my_x, my_y, my_z + 1); moveLibrary.moveOut(my_x - 16, my_y + 16, my_z); term.clear(); creat_file(); goto try_again5
