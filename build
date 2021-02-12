@@ -24,12 +24,13 @@ local danger_blocks = {["minecraft:stone_button"] = "каменная кнопк
 			["minecraft:snow_slab"] = "(игнорируется)snow_slab",
 			["minecraft:wooden_door"] = "(игнорируется) деревянная дверь",
 			["minecraft:skull"] = "(игнорируется) череп",
-			["minecraft:water"] = "вода"
+			["minecraft:water"] = "вода",
+			["minecraft:torch"] = "факел"
       }
 --игнорируемые файлы при составлении списка схем для удаления
 local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok"}
 --игнорируемые блоки при определении высоты
-local ignore_block_height = {["minecraft:air"] = "ok", ["Thaumcraft:blockAiry"] = "ok", ["OpenComputers:robot"] = "ok", ["minecraft:water"] = "ok"}
+local ignore_block_height = {["minecraft:air"] = "ok", ["Thaumcraft:blockAiry"] = "ok", ["OpenComputers:robot"] = "ok", ["minecraft:water"] = "ok", ["minecraft:flowing_water"] = "ok"}
 --------------------------------------------------------------------------------------------
 local done_load = false --первоначальная проверка загружаемых библиотек
 local pair_count  = 0 --количество своев в таблице, высчитывается при стартовых проверках
