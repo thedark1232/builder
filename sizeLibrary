@@ -2,8 +2,10 @@
 -- edit /usr/lib/sizeLibrary.lua
 
 local size_table_library = {}
-
+local component = require("component")
 local robot = require("robot")
+
+local navigate = component.navigation
 
 -- возвращает таблицу, в какую сторону роботу необходимо повернуться
 --move_size_table[нужная сторона][сторона, на которой находится робот]
@@ -34,8 +36,14 @@ function size_table_library.build_pair_sizes()
     move_size_table[5][3] = function() robot.turnLeft() end
     move_size_table[5][4] = function() robot.turnAround() end
     move_size_table[5][5] = function() end --восток
-    
+	
     return move_size_table
+end
+
+--повороты робота по сторонам света
+function size_table_library.turn_NSWE(side)
+	local table_sides = size_table_library.build_pair_sizes()
+	while navigate.getFacing() ~= side do table_sides[side][navigate.getFacing()]() end
 end
 
 return size_table_library
