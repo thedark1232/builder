@@ -1,6 +1,6 @@
 --движение с запада на восток
 --вторая версия билдера, роботы и склады расположены над постройкой(не мешают соседним чанкам) 
---дорожки из блоков для склада нужно ставить, а ограничители нет. Робот остановится, когда под ним будет minecraft:air
+--дорожки из блоков для склада нужно ставить, а ограничители нет. Робот остановится, когда под ним будет minecraft:air (пустота)
 component = require("component")
 local fileSystem = require("filesystem")
 local computer = require("computer")
@@ -138,10 +138,10 @@ function weit_ten_seconds()
 	end
 end
 --функция для дебага, ожидание 10 секунд с выводом времени на экран
-function deb(print_text)
-	print(print_text)
+function deb(print_text, wait_time)
+	print(print_text, wait_time)
 	print("ОСТАЛОСЬ ВРЕМЕНИ:")
-	for i = 10, 1, -1 do
+	for i = wait_time, 1, -1 do
 		print(i)
 		os.sleep(1)
 	end
@@ -464,8 +464,10 @@ end
 function delete_scheme(choose_number, scheme_table)
 	local t_num = choose_number - 4
 	local del_line = choose_number + 3
-	fileSystem.remove("/usr/lib/" ..scheme_table[t_num])
-	if scheme_table[t_num] ~= nil then table.remove(scheme_table, t_num) end
+	if scheme_table[t_num] ~= nil then
+		fileSystem.remove("/usr/lib/" .. scheme_table[t_num])
+		table.remove(scheme_table, t_num)
+	end
 	return scheme_table
 end
 ------------------------------------------------------------------------------------------------------------------------------
@@ -667,7 +669,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
 		local geoAnalyze = geo.analyze(0).name
-		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" then computer.beep(400, 2); deb("ЖДУ 10 СЕКУНД"); goto try_again2 end
+		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" or geoAnalyze == "minecraft:flowing_water" then computer.beep(400, 2); deb("ЖДУ 3 СЕКУНДЫ", 3); goto try_again2 end
 		computer.beep(1000, 0.1)
 		robot.select(g_key_slot_num)
 		inv.equip()
@@ -685,7 +687,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		computer.beep(1000, 0.1)
 		moveLibrary.z_move(z)
 		local geoAnalyze2 = geo.analyze(0).name
-		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("жду 10 секунд") goto try_again2 end
+		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" or geoAnalyze2 == "minecraft:flowing_water" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("ЖДУ 3 СЕКУНДЫ", 3); goto try_again2 end
 		computer.beep(1000, 0.1)
 		inv.equip()
 		robot.select(g_key_slot_num)
@@ -710,7 +712,7 @@ function build_blocks(block_number_slot, hopper, block_name)
 	--deb_enter("проверяю на совпадение блока под собой")
 	if geo.analyze(0).name ~= block_name then
 		computer.beep(400, 2)
-		deb("ЖДУ 10 СЕКУНД")
+		deb("ЖДУ 3 СЕКУНДЫ", 3)
 		goto try_again3
 	end
 	computer.beep(1000, 0.1)
@@ -732,9 +734,9 @@ function build_planks(it_is_down, it_is_bouble)
 		robot.useDown()
 		moveLibrary.z_move(mov_z)
 		local geoAnalyze = geo.analyze(0).name
-		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" then
+		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" or geoAnalyze == "minecraft:flowing_water" then
 			computer.beep(400, 2)
-			deb("ЖДУ 10 СЕК")
+			deb("ЖДУ 3 СЕКУНДЫ", 3)
 			goto build_again
 		end
 		computer.beep(1000, 0.1)
@@ -756,7 +758,7 @@ function build_planks(it_is_down, it_is_bouble)
 			if geo.analyze(0).name ~= stone_or_wood then
 				moveLibrary.z_move(mov_z + 1)
 				computer.beep(400, 2)
-				deb("ЖДУ 10 СЕК")
+				deb("ЖДУ 3 СЕКУНДЫ", 3)
 				goto build_again2
 			end
 		computer.beep(1000, 0.1)
@@ -769,9 +771,9 @@ function build_planks(it_is_down, it_is_bouble)
 		::build_again3::
 		robot.useDown()
 		local geoAnalyze2 = geo.analyze(0).name
-		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" then
+		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" or geoAnalyze2 == "minecraft:flowing_water" then
 			computer.beep(400, 2)
-			deb("ЖДУ 10 СЕК")
+			deb("ЖДУ 3 СЕКУНДЫ", 3)
 			goto build_again3
 		end
 		first_slot_transfer()
@@ -849,13 +851,21 @@ function return_and_find_item(block_name, meta, check_meta)
 			goto next_check
 		end
 	end
+	turn_NSWE(W) --мордой на запад
+	local first_check = robot.count(slot_number) --записать количество блоков в слоте до начала подхода к воронке
 	moveLibrary.z_move(start_position.z + posZ + 1) --поднятся на блок выше к воронкам
 	local slot_number = 0
 	while find_block(block_name, false, meta, false, false) == 0 do end
 	slot_number = find_block(block_name,  false, meta, false, false)
-	os.sleep(5) --время перед проверкой количества собраных блоков, когда робот поднял вверх к воронке
-	while robot.count(slot_number) < 1 do term.clear(); print("в воронке закончились блоки"); computer.beep(400, 1) end
-	while robot.count(slot_number) < 60 do term.clear(); print("количество блоков собрано: " ..robot.count(slot_number).. " из 60"); computer.beep(1000, 0.1); end
+	term.clear()
+	deb("ОЖИДАНИЕ 5 СЕКУНД ДО ПРОВЕРКИ", 5)
+	term.clear()
+	local second_check = robot.count(slot_number) --записать количество блоков в слоте после ожидания 5 секунд, после подхода к воронке
+	if second_check == first_check then
+		while robot.count(slot_number) < 50 do term.clear(); print("количество блоков собрано: " ..robot.count(slot_number).. " из 50"); print("в воронке закончились блоки"); print("жду заполнения воронки!!"); computer.beep(400, 1) end
+	else
+		while robot.count(slot_number) < 60 do term.clear(); print("количество блоков собрано: " ..robot.count(slot_number).. " из 60"); computer.beep(1000, 0.1); end
+	end
 	term.clear()
 	moveLibrary.moveOut(start_position.x, start_position.y, start_position.z + 1)
 	moveLibrary.z_move(pos_z)
@@ -882,9 +892,16 @@ function return_to_base_and_get_planks(block_name, meta_num, block_num_in_invent
 		local analyze = geo.analyze(0)
 		if analyze.name == block_name and analyze.metadata == meta_num then
 			robot.transferTo(1) --перемещение из активного слота в первый слот робота
+			local first_check2 = robot.count(1)
+			turn_NSWE(W) --мордой на запад
 			moveLibrary.z_move(start_position.z + 2)
-			turn_NSWE(W)
-			while robot.count(1) < 60 do computer.beep(1000,0.1); term.clear(); print("всего блоков: " ..robot.count(1)) end
+			term.clear(); deb("ЖДУ 5 СЕКУНД ДО НАЧАЛА ПРОВЕРКИ"); term.clear()
+			local second_check2 = robot.count(1)
+			if second_check2 == first_check2 then
+				while robot.count(slot_number) < 50 do term.clear(); print("количество планок собрано: " ..robot.count(1).. " из 50"); print("в воронке закончились планки"); print("жду заполнения воронки!!"); computer.beep(400, 1) end
+			else
+				while robot.count(1) < 60 do computer.beep(1000, 0.1); term.clear(); print("всего блоков: " ..robot.count(1).. " из 60") end
+			end
 			moveLibrary.moveOut(start_position.x + 4, start_position.y, start_position.z + 1)
 			moveLibrary.moveOut(start_position.x, start_position.y, start_position.z + 1)
 			robot.select(1) --выбрать первый слот у робота
