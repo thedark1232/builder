@@ -7,7 +7,6 @@ local robot = require("robot")
 local component = require("component")
 local table_sides = require("sizeLibrary").build_pair_sizes()
 local computer = require("computer")
-local table_sides = {}
 
 local navigate = component.navigation
 
