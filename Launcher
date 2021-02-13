@@ -11,7 +11,8 @@ local librarys = {["energyChecker"] = {"/usr/lib/energyChecker.lua", "https://ra
 				  ["return"] = {"/home/return", "https://raw.githubusercontent.com/thedark1232/builder/main/return"},
 				  ["oldBuild"] = {"/home/oldBuild", "https://raw.githubusercontent.com/thedark1232/builder/main/old_builder"},
 				  ["table_planks_rus"] = {"/usr/lib/table_planks.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/table_planks_rus"},
-				  ["table_planks_eng"] = {"/usr/lib/table_planks.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/table_planks_eng"}  
+				  ["table_planks_eng"] = {"/usr/lib/table_planks.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/table_planks_eng"},
+				  ["filesLibrary"] = {"/usr/lib/filesLibrary", "https://raw.githubusercontent.com/thedark1232/builder/main/filesLibrary"}
 				}
 
 --дебаг, нажать энтер для продолжения
