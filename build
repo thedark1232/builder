@@ -45,6 +45,9 @@ local modem_is_avalible --наличие модема
 local file_programm_name, creat
 local navigate, geo, inv --компоненты
 local moveLibrary, table_sides, energyChecker --библиотеки
+local last_block --номер последнего построенного блока в схеме
+local last_block_mode --булево значение(продолжает стройку с последнего места, либо начинает стройку заного)
+local block_number --хранит количество блоков в слое, нужно для главного цикла
 local hopper_block = false
 local inv_size
 local all_blocks = {}
@@ -160,6 +163,7 @@ print("чтение файла высоты робота")
 	local file_p = io.open(file_name,"r")
 	if file_p == nil then --ФАЙЛ НЕ СУЩЕСТВУЕТ
 		robot_slayer = "не определено"
+		file_p:close()
 	else --ФАЙЛ СУЩЕСТВУЕТ
 		local r = file_p:read()
 		if r == nil then --ФАЙЛ ПУСТОЙ
@@ -167,6 +171,26 @@ print("чтение файла высоты робота")
 			file_p:close()
 		else --В ФАЙЛЕ ЕСТЬ ДАННЫЕ
 			robot_slayer = tonumber(r)
+			file_p:close()
+		end
+	end
+end
+--запись и чтение последнего поставленного блока в постройке
+function file_last_block()
+print("чтение файла последнего блока робота")
+	local file_name = "last_build_block.lua"
+	--открыть файл в режиме чтения
+	local file_p = io.open(file_name,"r")
+	if file_p == nil then --ФАЙЛ НЕ СУЩЕСТВУЕТ
+		last_block = 0
+		file_p:close()
+	else --ФАЙЛ СУЩЕСТВУЕТ
+		local r = file_p:read()
+		if r == nil then --ФАЙЛ ПУСТОЙ
+			last_block = 0
+			file_p:close()
+		else --В ФАЙЛЕ ЕСТЬ ДАННЫЕ
+			last_block = tonumber(r)
 			file_p:close()
 		end
 	end
@@ -303,7 +327,7 @@ function scheme_menu()
 	   print("█  3 - скачать схему из инета                    █")
 	   print("█  4 - открыть схему без pcall(дебаг)            █")
 	   print("█  0 - выход                                     █")
-	   print("█▄▄▄▄▄▄▄▄▄▄ СОДЕРЖИМОЕ ПАПКИ /usr/lib/ ▄▄▄▄▄▄▄▄▄▄█")
+	   print("█▄▄▄▄▄▄▄▄ УДАЛЕНИЕ СТАРЫХ СХЕМ ИЗ ПАПКИ: ▄▄▄▄▄▄▄▄█")
 	   print("█                                                █")
 	   print("█                                                █")
 	   print("█                                                █")
@@ -973,16 +997,34 @@ do
 	start_position.x, start_position.z, start_position.y = navigate.getPosition() --определить начальные координаты
 	local allSlay = all_slyers() --определить, сколько всего слоев присутствует в схеме
 	file_slayer()--определение слоя для строительства
-	
 	term.clear()
 	print("Всего слоев в схеме: " ..allSlay)
 	print("0 = выход из программы")
 	print("последний построенный слой: " ..robot_slayer)
 	io.write("С какого слоя нужно строить?: -> ")
-	local slayer = io.read()
+	local slayer = tostring(io.read())
 	local sl_plus = tonumber(slayer)
-	if slayer == "0" then os.exit() end
-	slayer = tostring(slayer)
+	if slayer == "0" then term.clear(); print("ошибка чтения слоя"); print("программа завершена"); os.exit() end
+	--определение последнего построенного блока в слое
+	term.clear()
+	file_last_block(); last_block_mode = false
+	if tonumber(last_block) > 1 then
+		print("Всего блоков в в слое номер " .. slayer .. " -> " .. #programm_t[slayer].x)
+		print("0 = выход из программы")
+		print("последний построенный блок: " .. last_block)
+		print("-------------------------------")
+		print("1 = продолжить стройку")
+		print("2 = начать слой с нуля")
+		local what = pcall_return_num(0, 2)
+		if what == 1 then
+			last_build_block = true
+			last_block = tonumber(last_block) - 1
+		elseif what == 2 then
+			last_block_mode = false
+		else
+			term.clear(); print("программа завершена"); os.exit()
+		end
+	end
 	--определение количества складов в постройке
 	term.clear()
 	print("определение количества складов с блоками:")
@@ -1006,25 +1048,31 @@ do
 	for sl = sl_plus, allSlay do
 		slayer = tostring(sl)
 		moveLibrary.z_move(start_position.z + tonumber(slayer) - robot_height) --выдвижение на высоту ввверх
-		for i = #programm_t[slayer].x,1,-1 do
-		move_block_from_robot_arm() --перемещение предмета руки робота, если он в нем есть, в любой свободный слот, кроме первого слота
-		hopper_block = false
-		---------------------ОПРЕДЕЛЕНИЕ ОПАСНЫХ БЛОКОВ----------------------------------
-		--таблица опастных блоков находится в начале кода(в разделе таблиц)
-		--вносить туда блоки, который робот должен игнорироватть при стройке
-		local programm_t_slayer_name_i = programm_t[slayer].name[i]
-		if danger_blocks[programm_t_slayer_name_i] == nil then
-			if programm_t_slayer_name_i == "minecraft:double_wooden_slab" then programm_t[slayer].name[i] = table_planks[1]; it_is_double = true; wood = "wooden" end --двойные плиты из дерева меняет на доски
-			if programm_t_slayer_name_i == "minecraft:double_stone_slab" then programm_t[slayer].name[i] = table_planks[2]; it_is_double = true; wood = "stone" end --двойне плиты из камня меняет на каменные кирпичи
-			if programm_t_slayer_name_i == table_planks[1] then it_is_planks = true; wood = "wooden" end
-			if programm_t_slayer_name_i == table_planks[2] then it_is_planks = true; wood = "stone" end
-			if programm_t_slayer_name_i == "minecraft:lit_redstone_lamp" then programm_t[slayer].name[i] = "minecraft:redstone_lamp" end
-			if programm_t_slayer_name_i == "minecraft:monster_egg" then programm_t[slayer].name[i] = "minecraft:stonebrick" end
-			if programm_t_slayer_name_i == "minecraft:hopper" then hopper_block = true end
+		if not last_block_mode then --продолжение стройки, если выбран last_block_mode пользователем
+			block_number = #programm_t[slayer].x
 		else
-			programm_t[slayer].name[i] = "minecraft:trapdoor"
+			block_number = tonumber(last_block)
+			last_block_mode = false
 		end
-		---------------------------------------------------------------------------------
+		for i = block_number, 1, -1 do
+			move_block_from_robot_arm() --перемещение предмета руки робота, если он в нем есть, в любой свободный слот, кроме первого слота
+			hopper_block = false
+			---------------------ОПРЕДЕЛЕНИЕ ОПАСНЫХ БЛОКОВ----------------------------------
+			--таблица опастных блоков находится в начале кода(в разделе таблиц)
+			--вносить туда блоки, который робот должен игнорироватть при стройке
+			local programm_t_slayer_name_i = programm_t[slayer].name[i]
+			if danger_blocks[programm_t_slayer_name_i] == nil then
+				if programm_t_slayer_name_i == "minecraft:double_wooden_slab" then programm_t[slayer].name[i] = table_planks[1]; it_is_double = true; wood = "wooden" end --двойные плиты из дерева меняет на доски
+				if programm_t_slayer_name_i == "minecraft:double_stone_slab" then programm_t[slayer].name[i] = table_planks[2]; it_is_double = true; wood = "stone" end --двойне плиты из камня меняет на каменные кирпичи
+				if programm_t_slayer_name_i == table_planks[1] then it_is_planks = true; wood = "wooden" end
+				if programm_t_slayer_name_i == table_planks[2] then it_is_planks = true; wood = "stone" end
+				if programm_t_slayer_name_i == "minecraft:lit_redstone_lamp" then programm_t[slayer].name[i] = "minecraft:redstone_lamp" end
+				if programm_t_slayer_name_i == "minecraft:monster_egg" then programm_t[slayer].name[i] = "minecraft:stonebrick" end
+				if programm_t_slayer_name_i == "minecraft:hopper" then hopper_block = true end
+			else
+				programm_t[slayer].name[i] = "minecraft:trapdoor"
+			end
+			---------------------------------------------------------------------------------
 			if programm_t[slayer].name[i] ~= "minecraft:trapdoor" then
 				--определение оставшегося количества энергии
 				if not test_game_mode then check_energy_in_line(energyMinimym) end
@@ -1086,6 +1134,7 @@ do
 			end
 			it_is_double = false
 			it_is_planks = false
+			local fileLastBlock = io.open("last_build_block.lua", "w"); fileLastBlock:write(i); fileLastBlock:close() --записать готовый остроенный блок в таблицу
 		end
 		local file_sl = io.open("robot_slayer.lua", "w"); file_sl:write(sl); file_sl:close() --записать готовый слой в таблицу
 	end
