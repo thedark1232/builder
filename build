@@ -42,9 +42,10 @@ local robot_height = 0 --определение высоты робота до �
 local robot_slayer --вычисление последнего построенного слоя
 local how_many_werehouses --настраиваемое при старте проги, сколько своев склада вверх?
 local modem_is_avalible --наличие модема
+local modem_robot_port, modem_comp_port --порты модема и компа, настраиваются в стартовой менюшке
 local file_programm_name, creat
 local navigate, geo, inv --компоненты
-local moveLibrary, table_sides, energyChecker --библиотеки
+local moveLibrary, table_sides, energyChecker, filesLibrary --библиотеки
 local last_block --номер последнего построенного блока в схеме
 local last_block_mode --булево значение(продолжает стройку с последнего места, либо начинает стройку заного)
 local block_number --хранит количество блоков в слое, нужно для главного цикла
@@ -241,19 +242,32 @@ function open_main_menu()
 	print("█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ГЛАВНОЕ МЕНЮ:▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█")
 	print("█ 0 - выход из программы                         █")
 	print("█ 1 - начать строительство объекта               █")
-	print("█ 12 - открыть файл werehouse(допилить код)      █")
+	print("█ 12 - место для вашей рекламы                   █")
 	print("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█")
-	print("█ передвинуть робота на: █      М О Д Е М:       █")
-	print("█ 2 - СЕВЕР              █ порт робота:          █")
-	print("█ 3 - ЮГ                 █ порт компа:           █")
-	print("█ 4 - ЗАПАД              █    смена портов:      █")
-	print("█ 5 - ВОСТОК             █ 20 - робота           █")
-	print("█ 6 - СЕВЕРО-ЗАПАД       █ 21 - компа            █")
+	print("█ передвинуть робота на: █                       █")
+	print("█ 2 - СЕВЕР              █                       █")
+	print("█ 3 - ЮГ                 █                       █")
+	print("█ 4 - ЗАПАД              █                       █")
+	print("█ 5 - ВОСТОК             █                       █")
+	print("█ 6 - СЕВЕРО-ЗАПАД       █                       █")
 	print("█ 7 - СЕВЕРО-ВОСТОК      █                       █")
 	print("█ 8 - ЮГО-ЗАПАД          █                       █")
 	print("█ 9 - ЮГО-ВОСТОК         █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█")
 	print("█ 10 - движение по Z     █                       █")
 	io.write("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█")
+	if modem_is_avalible then --если компонент беспроводной сети вставлен в робота
+		modem_robot_port = tonumber(filesLibrary.write_file("robot_port_number", 0)) --второй аргумент, значение возвращаемое по умолчанию, если файл не найден
+		modem_comp_port = tonumber(filesLibrary.write_file("comp_port_number", 0)) --второй аргумент, значение возвращаемое по умолчанию, если файл не найден
+		term.setCursor(30, 6);  io.write("МОДЕМ: ONLINE")
+		term.setCursor(27, 7);  io.write("порт робота: " .. tostring(modem_robot_port))
+		term.setCursor(27, 8);  io.write("порт компа: " .. tostring(modem_comp_port))
+		term.setCursor(31, 9);  io.write("СМЕНА ПОРТОВ: ")
+		term.setCursor(27, 10); io.write("20 - робота")
+		term.setCursor(27, 11); io.write("21 - компа")
+	else
+		term.setCursor(30, 9); io.write("МОДЕМ: OFFLINE")
+	end
+	clear_input_window(28, 15, 22)
 	term.setCursor(28, 15)
 	io.write("ВВОД -> ")
 	local chose_num = tonumber(io.read())
@@ -279,11 +293,12 @@ function open_main_menu()
 		moveLibrary.moveOut(my_x, my_y, my_z + z_num); creat_file()
 		goto try_again5
 	elseif chose_num == 12 then
-		term.clear()
-		local _,err = pcall(build_warehouse)
-		if type(err) == "string" then print(err); print("проверь наличие файла warehouse"); print("программа завершена"); computer.beep(1000,0.1); computer.beep(1000,0.1); os.exit() end
-		for k,v in pairs(pair_blocks) do print(k,v) end
-		for key, val in pairs(pair_planks) do print(key,val) end
+		goto try_again5
+	elseif chose_num == 20 then --смена порта робота
+		clear_input_window(28, 15, 22); term.setCursor(28, 15); filesLibrary.creat_file("robot_port_number", pcall_return_num(1, 65535)
+		goto try_again5
+	elseif chose_num == 21 then --смена порта компа
+		clear_input_window(28, 15, 22); term.setCursor(28, 15); filesLibrary.creat_file("comp_port_number", pcall_return_num(1, 65535)
 		goto try_again5
 	end
 end
@@ -345,14 +360,14 @@ function scheme_menu()
 		if ignore_files[scheme] == nil then all_schems[#all_schems + 1] = scheme end
 	end
 	::chooseAgain::
-	for cl = 8, 13 do clear_input_window(2, cl) end
+	for cl = 8, 13 do clear_input_window(2, cl, 48) end
 	for k, v in ipairs(all_schems) do
 		if k < 7 then
 			term.setCursor(3, k + 7)
 			io.write(k + 4 .. " - " .. v)
 		end
 	end
-	clear_input_window(3, 15); term.setCursor(3, 15)
+	clear_input_window(3, 15, 48); term.setCursor(3, 15)
 	io.write("ВВОД -> ")
 		local chose_mode = io.read()
 		if chose_mode == "5" or chose_mode == "6" or chose_mode == "7" or chose_mode == "8" or chose_mode == "9" or chose_mode == "10" then
@@ -360,7 +375,7 @@ function scheme_menu()
 			goto chooseAgain
 		end
 		if chose_mode == "1" then
-			clear_input_window(3, 15); term.setCursor(3, 15)
+			clear_input_window(3, 15, 48); term.setCursor(3, 15)
 			io.write("ЗАГРУЗКА... ОБОЖДИ")
 			local try, _ = pcall(function() programm_t = require(fileName).build_pair() end)
 			if not try then term.clear(); print("ОШИБКА ПРИ ОТКРЫТИЕ ФАЙЛА..."); computer.beep(400, 1); file:write(fileName); file:close(); os.exit() end
@@ -368,9 +383,9 @@ function scheme_menu()
 			file:close()
 		elseif chose_mode == "2" then
 			fileSystem.remove("/home/robot_slayer.lua")
-			clear_input_window(3, 15); term.setCursor(3, 15); io.write("введи название схемы ->                        █"); term.setCursor(27, 15)
+			clear_input_window(3, 15, 48); term.setCursor(3, 15); io.write("введи название схемы ->                        █"); term.setCursor(27, 15, 48)
 			creat = io.read()
-			clear_input_window(3, 15); term.setCursor(3, 15); io.write("ищу файл: " .. creat)
+			clear_input_window(3, 15, 48); term.setCursor(3, 15); io.write("ищу файл: " .. creat)
 			try, _ = pcall(function() programm_t = require(creat).build_pair() end)
 			if not try then term.clear(); print("схема " ..creat.. " не найдена, проверь в название отсутствие ==> .lua"); print("выход из программы"); file:write(fileName); file:close(); os.exit() end
 			file:write(creat)
@@ -383,15 +398,15 @@ function scheme_menu()
 			os.exit()
 		elseif chose_mode == "4" then
 			fileSystem.remove("/home/robot_slayer.lua")
-			clear_input_window(3, 15); term.setCursor(3, 15)
+			clear_input_window(3, 15, 48); term.setCursor(3, 15)
 			io.write("введи название схемы -> ")
 			creat = io.read()
-			clear_input_window(3, 15); term.setCursor(3, 15)
+			clear_input_window(3, 15, 48); term.setCursor(3, 15)
 			io.write("ищу файл: " .. creat)
 			file:write(creat)
 			file:close()
 			programm_t = require(creat).build_pair()
-			clear_input_window(3, 15); term.setCursor(3, 15)
+			clear_input_window(3, 15, 48); term.setCursor(3, 15)
 			io.write("Схема успешно загружена. Жми любую кнопку... ")
 			local delete = io.read()
 		elseif chose_mode == "3" then
@@ -474,9 +489,9 @@ function robot_go_down(value_height)
 	end
 end
 --очищает выбранную строку в информационном окошке робота
-function clear_input_window(x, y)
+function clear_input_window(x, y, lenght)
 	term.setCursor(x, y)
-	x = 48 - x
+	x = lenght - x
 	for i = 1, x do
 		io.write(" ")
 	end
@@ -658,7 +673,7 @@ function pcall_return_num(min_num, max_num)
 	io.write("ввод числа -> ")
 	local number = tonumber(io.read()) or 0
 	if number == nil then io.write(" ошибка ввода. "); computer.beep(1000,1); goto again_choose end
-	if number < min_num or number > max_num then io.write(" ошибка ввода. "); computer.beep(1000,1); goto again_choose end
+	if number < min_num or number > max_num then io.write(" ошибка ввода. "); computer.beep(1000, 1); goto again_choose end
 	return number
 end
 ------------------------------------------------------------------------------------------------------------------------------
@@ -984,10 +999,11 @@ do
 	moveLibrary = components_and_librarys.getLibrary("moveLibrary")
 	energyChecker = components_and_librarys.getLibrary("energyChecker")
 	table_planks = components_and_librarys.getLibrary("table_planks").build_pair()
+	filesLibrary = components_and_librarys.getLibrary("filesLibrary")
 	--------------------------------------------------------------------------------------
 	--присваивание переменных
 	inv_size = robot.inventorySize() --определение размера инвентаря робота
-	if modem == nil then modem_is_avalible = false else modem_is_avalible = false end --определение доступности модема
+	if modem == nil then modem_is_avalible = false else modem_is_avalible = true end --определение доступности модема
 	local _,err = pcall(function() dofile("/home/return") end)
 	if type(err) == "string" then print(err); print("проверь наличие файла return"); print("программа завершена"); computer.beep(1000,0.1); computer.beep(1000,0.1); os.exit() end
 	
