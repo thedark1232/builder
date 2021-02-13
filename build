@@ -66,7 +66,6 @@ local it_is_double = false
 local it_is_planks = false
 local wood = true
 local table_planks = {} --таблица планок, библиотека загружается отдельно
-local table_librarys = {} --таблица содержит загруженные самописные библиотеки, пример: table_librarys["sizeLibrary"].moveOut()
 --таблица деревьев
 local table_of_trees = {[1] = "minecraft:log"}
 --таблица листвы
@@ -636,8 +635,8 @@ function pcall_return_num(min_num, max_num)
 	::again_choose::
 	io.write("ввод числа -> ")
 	local number = tonumber(io.read()) or 0
-	if number == nil then io.write("ошибка ввода. "); computer.beep(1000,1); goto again_choose end
-	if number < min_num or number > max_num then io.write("ошибка ввода. "); computer.beep(1000,1); goto again_choose end
+	if number == nil then io.write(" ошибка ввода. "); computer.beep(1000,1); goto again_choose end
+	if number < min_num or number > max_num then io.write(" ошибка ввода. "); computer.beep(1000,1); goto again_choose end
 	return number
 end
 ------------------------------------------------------------------------------------------------------------------------------
