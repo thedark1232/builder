@@ -5,16 +5,23 @@ local move_lib = {}
 
 local robot = require("robot")
 local component = require("component")
-local sizeLibrary = require("sizeLibrary")
+local table_sides = require("sizeLibrary").build_pair_sizes()
+local computer = require("computer")
 local table_sides = {}
 
 local navigate = component.navigation
 
---загрузить таблицу поворотов робота при загрузки библиотеки
-do
-	table_sides = sizeLibrary.build_pair_sizes()
+--дебаг, нажать энтер для продолжения
+local function deb_enter(what_text)
+	if what_text ~= nil then print(what_text) end
+	print("жми ентер для продолжения")
+	local lol_enter = io.read()
 end
-
+--проверка координат робота на значение nil
+local function check_nil_value(x, y)
+	if x == nil then computer.beep(400, 2); deb_endter("достигнут край карты по Х координате") end
+	if y == nil then computer.beep(400, 2); deb_endter("достугнут край карты по У координате") end
+end
 --определить координаты робота.
 --если у робота координаты ~= nil вернет false
 --если робот находится не в пределах координат навигатора, то функция вернет true
@@ -25,12 +32,11 @@ function move_lib.check_navigate_component()
 	end
 	return false
 end
-
+-----------------------------------------------------------------------------------------------------------------
 --двигает робота на позицию без выламывания блоков перед собой
 function move_lib.moveOut(new_position_x, new_position_y, new_position_z)
-local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
-if robot_position_x == nil then robot_position_x = 0 end
-if robot_position_y == nil then robot_position_y = 0 end
+	local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
+	check_nil_value(robot_position_x, robot_position_y) --проверка на nil значение
 	while robot_position_x ~= new_position_x do
    		if robot_position_x < new_position_x then
 			table_sides[5][navigate.getFacing()]()
@@ -63,12 +69,10 @@ if robot_position_y == nil then robot_position_y = 0 end
 		end
 	end
 end
-
---двигает робота на позицию с выламыванием блоков перед собой
+--двигает робота на позицию с выламыванием блоков перед собой(начало по х)
 function move_lib.swing_and_move(new_position_x, new_position_y, new_position_z)
-local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
-if robot_position_x == nil then robot_position_x = 0 end
-if robot_position_y == nil then robot_position_y = 0 end
+	local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
+	check_nil_value(robot_position_x, robot_position_y) --проверка на nil значение
 	while robot_position_x ~= new_position_x do
    		if robot_position_x < new_position_x then
 			table_sides[5][navigate.getFacing()]()
@@ -107,11 +111,52 @@ if robot_position_y == nil then robot_position_y = 0 end
 		end
 	end
 end
+--двигает робота на позицию с выламыванием блоков перед собой(начало по у)
+function move_lib.swing_and_move_y_first(new_position_x, new_position_y, new_position_z)
+	local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
+	check_nil_value(robot_position_x, robot_position_y) --проверка на nil значение
+	while robot_position_y ~= new_position_y do
+   		if robot_position_y < new_position_y then
+      	  	table_sides[3][navigate.getFacing()]()
+			robot.swing()
+			robot.forward()
+     		_,_,robot_position_y = navigate.getPosition()
+   		elseif robot_position_y > new_position_y then
+    		table_sides[2][navigate.getFacing()]()	
+			robot.swing()
+			robot.forward()
+			_,_,robot_position_y = navigate.getPosition()
+   		end
+	end
+	while robot_position_x ~= new_position_x do
+   		if robot_position_x < new_position_x then
+			table_sides[5][navigate.getFacing()]()
+			robot.swing()
+			robot.forward()
+    		robot_position_x = navigate.getPosition()
+   		elseif robot_position_x > new_position_x then
+      		table_sides[4][navigate.getFacing()]()
+			robot.swing()
+            robot.forward()
+			robot_position_x = navigate.getPosition()
+  		end
+	end
+	while robot_position_z ~= new_position_z do
+		if robot_position_z < new_position_z then
+			robot.swingUp()
+			robot.up()
+			_,robot_position_z,_ = navigate.getPosition()
+		elseif robot_position_z > new_position_z then
+			robot.swingDown()
+			robot.down()
+			_,robot_position_z,_ = navigate.getPosition()
+		end
+	end
+end
 --двигает робота жопой, если движение жопой невозможно, но развернется и попробует выломать блок
 function move_lib.back_and_swing(new_position_x, new_position_y, new_position_z)
 local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
-if robot_position_x == nil then robot_position_x = 0 end
-if robot_position_y == nil then robot_position_y = 0 end
+	check_nil_value(robot_position_x, robot_position_y) --проверка на nil значение
 	while robot_position_x ~= new_position_x do
    		if robot_position_x < new_position_x then
 			table_sides[4][navigate.getFacing()]()
@@ -159,10 +204,10 @@ function move_lib.z_move(new_position_z)
 		end
 	end
 end
-
 --двигает робота по Х,У координатам
 function move_lib.x_y_move(new_position_x, new_position_y)
-local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
+	local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
+	check_nil_value(robot_position_x, robot_position_y) --проверка на nil значение
 	while robot_position_x ~= new_position_x do
    		if robot_position_x < new_position_x then
 			table_sides[5][navigate.getFacing()]()
@@ -188,7 +233,8 @@ local robot_position_x, robot_position_z, robot_position_y = navigate.getPositio
 end
 --двигает робота по Х,У координатам с уничтожение блоков(последний аргумент true = дополнительно уничтожать блоки над собой)
 function move_lib.x_y_swing(new_position_x, new_position_y, up_blocks)
-local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
+	local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
+	check_nil_value(robot_position_x, robot_position_y) --проверка на nil значение
 	while robot_position_x ~= new_position_x do
    		if robot_position_x < new_position_x then
 			table_sides[5][navigate.getFacing()]()
@@ -220,4 +266,5 @@ local robot_position_x, robot_position_z, robot_position_y = navigate.getPositio
    		end
 	end
 end
+
 return move_lib
