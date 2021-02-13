@@ -163,7 +163,6 @@ print("чтение файла высоты робота")
 	local file_p = io.open(file_name,"r")
 	if file_p == nil then --ФАЙЛ НЕ СУЩЕСТВУЕТ
 		robot_slayer = "не определено"
-		file_p:close()
 	else --ФАЙЛ СУЩЕСТВУЕТ
 		local r = file_p:read()
 		if r == nil then --ФАЙЛ ПУСТОЙ
@@ -183,7 +182,6 @@ function file_last_block()
 	local file_p = io.open(file_name,"r")
 	if file_p == nil then --ФАЙЛ НЕ СУЩЕСТВУЕТ
 		last_block = 0
-		file_p:close()
 	else --ФАЙЛ СУЩЕСТВУЕТ
 		local r = file_p:read()
 		if r == nil then --ФАЙЛ ПУСТОЙ
