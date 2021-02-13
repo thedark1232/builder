@@ -177,7 +177,7 @@ print("чтение файла высоты робота")
 end
 --запись и чтение последнего поставленного блока в постройке
 function file_last_block()
-print("чтение файла последнего блока робота")
+	print("чтение файла последнего блока робота")
 	local file_name = "last_build_block.lua"
 	--открыть файл в режиме чтения
 	local file_p = io.open(file_name,"r")
@@ -1141,6 +1141,8 @@ do
 	return_on_start_position()
 	term.clear()
 	print("СТРОИТЕЛЬСТВО ЗАВЕРШЕНО")
+	local file_sl2 = io.open("robot_slayer.lua", "w"); file_sl2:close()
+	local fileLastBloc2 = io.open("last_build_block.lua", "w"); fileLastBloc2:close()
 	for end_build = 1, 3 do
 		computer.beep(400,0.5)
 		computer.beep(800,0.5)
