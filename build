@@ -238,6 +238,13 @@ function open_main_menu()
 	::try_again5::
 	local multiplier = 1 --множитель передвижения робота по чанкам (работает только по N,S,W,E)
 	my_x, my_z, my_y = navigate.getPosition()
+	if my_x == nil or my_y == nil or my_z == nil then
+		term.clear();
+		computer.beep(400, 0.1)
+		print("одно из направлений по навигации не определено")
+		print("совмести навигацию с новой картой")
+		os.exit()
+	end
 	                           --▀ █ ▄--
 	print("█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ГЛАВНОЕ МЕНЮ:▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█")
 	print("█ 0 - выход из программы                         █")
@@ -300,8 +307,11 @@ function open_main_menu()
 	elseif chose_num == 21 then --смена порта компа
 		clear_input_window(28, 15, 22); term.setCursor(28, 15); filesLibrary.creat_file("comp_port_number", pcall_return_num(1, 65535)
 		goto try_again5
+	else
+		goto try_again5
 	end
 end
+
 --меню выбора схемы
 function scheme_menu()
 	term.clear()
