@@ -302,10 +302,10 @@ function open_main_menu()
 	elseif chose_num == 12 then
 		goto try_again5
 	elseif chose_num == 20 then --смена порта робота
-		clear_input_window(28, 15, 22); term.setCursor(28, 15); filesLibrary.creat_file("robot_port_number", pcall_return_num(1, 65535)
+		clear_input_window(28, 15, 22); term.setCursor(28, 15); filesLibrary.creat_file("robot_port_number", pcall_return_num(1, 65535))
 		goto try_again5
 	elseif chose_num == 21 then --смена порта компа
-		clear_input_window(28, 15, 22); term.setCursor(28, 15); filesLibrary.creat_file("comp_port_number", pcall_return_num(1, 65535)
+		clear_input_window(28, 15, 22); term.setCursor(28, 15); filesLibrary.creat_file("comp_port_number", pcall_return_num(1, 65535))
 		goto try_again5
 	else
 		goto try_again5
