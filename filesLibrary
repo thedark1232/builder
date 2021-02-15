@@ -24,27 +24,27 @@ function filesLibrary.write_file(file_name, return_value)
 	end
 end
 
-function creat_file(file_name)
-	--открыть файл в режиме чтения
-	local file_p = io.open(file_name,"r")
-	if file_p == nil then --ФАЙЛ НЕ СУЩЕСТВУЕТ
-		file_p = io.open(file_name,"w") --создать файл в режиме записи
-		--запись параметров в файл
-		file_p:write("здесь какие то параметры для записи") --не забыть поставить в конце \n
-	else --ФАЙЛ СУЩЕСТВУЕТ
-		local r = file_p:read()
-		if r == nil then --ФАЙЛ ПУСТОЙ
-			file_p:close()
-			print("файл пустой")
-			file_p = io.open(file_name,"w") --создать файл в режиме записи
-			file_p:write("здесь какие то параметры для записи") --не забыть поставить в конце \n
+-- function filesLibrary.creat_file(file_name)
+	-- --открыть файл в режиме чтения
+	-- local file_p = io.open(file_name,"r")
+	-- if file_p == nil then --ФАЙЛ НЕ СУЩЕСТВУЕТ
+		-- file_p = io.open(file_name,"w") --создать файл в режиме записи
+		-- --запись параметров в файл
+		-- file_p:write("здесь какие то параметры для записи") --не забыть поставить в конце \n
+	-- else --ФАЙЛ СУЩЕСТВУЕТ
+		-- local r = file_p:read()
+		-- if r == nil then --ФАЙЛ ПУСТОЙ
+			-- file_p:close()
+			-- print("файл пустой")
+			-- file_p = io.open(file_name,"w") --создать файл в режиме записи
+			-- file_p:write("здесь какие то параметры для записи") --не забыть поставить в конце \n
 			
-		else --В ФАЙЛЕ ЕСТЬ ДАННЫЕ
-			print("в файле есть данные")
-			print(r)
-		end
-	end
-	file_p:close() --закрыть файл после всех операций
-end
+		-- else --В ФАЙЛЕ ЕСТЬ ДАННЫЕ
+			-- print("в файле есть данные")
+			-- print(r)
+		-- end
+	-- end
+	-- file_p:close() --закрыть файл после всех операций
+-- end
 
 return filesLibrary
