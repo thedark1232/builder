@@ -25,7 +25,8 @@ local danger_blocks = {["minecraft:stone_button"] = "каменная кнопк
 			["minecraft:wooden_door"] = "(игнорируется) деревянная дверь",
 			["minecraft:skull"] = "(игнорируется) череп",
 			["minecraft:water"] = "вода",
-			["minecraft:torch"] = "факел"
+			["minecraft:torch"] = "факел",
+			["minecraft:lava"] = "лава"
       }
 --игнорируемые файлы при составлении списка схем для удаления
 local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok", ["filesLibrary.lua"] = "ok"}
