@@ -28,7 +28,7 @@ local danger_blocks = {["minecraft:stone_button"] = "каменная кнопк
 			["minecraft:torch"] = "факел"
       }
 --игнорируемые файлы при составлении списка схем для удаления
-local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok"}
+local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok", ["filesLibrary.lua"] = "ok"}
 --игнорируемые блоки при определении высоты
 local ignore_block_height = {["minecraft:air"] = "ok", ["Thaumcraft:blockAiry"] = "ok", ["OpenComputers:robot"] = "ok", ["minecraft:water"] = "ok", ["minecraft:flowing_water"] = "ok"}
 --------------------------------------------------------------------------------------------
