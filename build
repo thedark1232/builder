@@ -942,7 +942,7 @@ function return_to_base_and_get_planks(block_name, meta_num, block_num_in_invent
 			local first_check2 = robot.count(1)
 			turn_NSWE(W) --мордой на запад
 			moveLibrary.z_move(start_position.z + 2)
-			term.clear(); deb("ЖДУ 5 СЕКУНД ДО НАЧАЛА ПРОВЕРКИ"); term.clear()
+			term.clear(); deb("ЖДУ 5 СЕКУНД ДО НАЧАЛА ПРОВЕРКИ", 5); term.clear()
 			local second_check2 = robot.count(1)
 			if second_check2 == first_check2 then
 				while robot.count(slot_number) < 50 do term.clear(); print("количество планок собрано: " ..robot.count(1).. " из 50"); print("в воронке закончились планки"); print("жду заполнения воронки!!"); computer.beep(400, 1) end
