@@ -900,10 +900,18 @@ function return_and_find_item(block_name, meta, check_meta)
 	end
 	turn_NSWE(W) --мордой на запад
 	local slot_number = 0
-	while find_block(block_name, false, meta, false, false) == 0 do end
+	moveLibrary.z_move(start_position.z + posZ + 1) --поднятся на блок выше к воронкам
+	local find_block_sycle = 0
+	while find_block(block_name, false, meta, false, false) == 0 do
+		find_block_sycle = find_block_sycle + 1
+		if find_block_sycle > 3 then
+			term.clear()
+			print("В ВОРОНКЕ ЗАКОНЧИЛИСЬ БЛОКИ")
+			computer.beep(400, 1)
+		end
+	end
 	slot_number = find_block(block_name,  false, meta, false, false)
 	local first_check = robot.count(slot_number) --записать количество блоков в слоте до начала подхода к воронке
-	moveLibrary.z_move(start_position.z + posZ + 1) --поднятся на блок выше к воронкам
 	term.clear()
 	deb("ОЖИДАНИЕ 5 СЕКУНД ДО ПРОВЕРКИ", 5)
 	term.clear()
@@ -1173,3 +1181,4 @@ do
 		computer.beep(800,0.5)
 	end
 end
+
