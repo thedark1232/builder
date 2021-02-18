@@ -1050,7 +1050,7 @@ do
 		print("2 = начать слой с нуля")
 		local what = pcall_return_num(0, 2)
 		if what == 1 then
-			last_build_block = true
+			last_block_mode = true
 			last_block = tonumber(last_block) - 1
 		elseif what == 2 then
 			last_block_mode = false
@@ -1181,4 +1181,3 @@ do
 		computer.beep(800,0.5)
 	end
 end
-
