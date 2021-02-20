@@ -11,7 +11,7 @@ local planks_table
 local test_game_mode = false --если включен тестовый мод, то робот не будет проверять энергию
 --------------------------------------------------------------------------------------------
 --названия папок построек из гитхаба
-local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn"}
+local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle"}
 --таблица опасных блоков(можно дополнять блоками, который робот будет игнорировать), в других местах код менять не надо
 local danger_blocks = {["minecraft:stone_button"] = "каменная кнопка",
 			["minecraft:tallgrass"] = "высокая трава",
@@ -26,7 +26,10 @@ local danger_blocks = {["minecraft:stone_button"] = "каменная кнопк
 			["minecraft:skull"] = "(игнорируется) череп",
 			["minecraft:water"] = "вода",
 			["minecraft:torch"] = "факел",
-			["minecraft:lava"] = "лава"
+			["minecraft:lava"] = "лава",
+			["minecraft:ladder"] = "лестница",
+			["minecraft:wooden_button"] = "деревянная кнопка",
+			["minecraft:flower_pot"] = "цветочный горшок"	
       }
 --игнорируемые файлы при составлении списка схем для удаления
 local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok", ["filesLibrary.lua"] = "ok"}
@@ -1102,6 +1105,7 @@ do
 				if programm_t_slayer_name_i == "minecraft:lit_redstone_lamp" then programm_t[slayer].name[i] = "minecraft:redstone_lamp" end
 				if programm_t_slayer_name_i == "minecraft:monster_egg" then programm_t[slayer].name[i] = "minecraft:stonebrick" end
 				if programm_t_slayer_name_i == "minecraft:hopper" then hopper_block = true end
+				if programm_t_slayer_name_i == "minecraft:mossy_cobblestone" then programm_t[slayer].name[i] = "minecraft:cobblestone" end
 			else
 				programm_t[slayer].name[i] = "minecraft:trapdoor"
 			end
