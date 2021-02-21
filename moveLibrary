@@ -110,6 +110,67 @@ function move_lib.swing_and_move(new_position_x, new_position_y, new_position_z)
 		end
 	end
 end
+--двигает робота на позицию с выламыванием блоков перед собой(начало по х) --анализирует руду под собой и над собой
+function move_lib.swing_and_move_and_analyze_ore(new_position_x, new_position_y, new_position_z)
+	local geo = component.geolyzer
+	local hardnessUp, hardnessDown
+	local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
+	check_nil_value(robot_position_x, robot_position_y) --проверка на nil значение
+	while robot_position_x ~= new_position_x do
+	
+   		if robot_position_x < new_position_x then
+			table_sides[5][navigate.getFacing()]()
+			robot.swing()
+			robot.forward()
+    		robot_position_x = navigate.getPosition()
+			hardnessUp = geo.analyze(1).hardness 
+			hardnessDown = geo.analyze(0).hardness
+			if hardnessUp == 3 or hardnessUp == 10 then robot.swingUp() end
+			if hardnessDown == 3 or hardnessDown == 10 then robot.swingDown() end
+   		elseif robot_position_x > new_position_x then
+      		table_sides[4][navigate.getFacing()]()
+			robot.swing()
+            robot.forward()
+			robot_position_x = navigate.getPosition()
+			hardnessUp = geo.analyze(1).hardness 
+			hardnessDown = geo.analyze(0).hardness
+			if hardnessUp == 3 or hardnessUp == 10 then robot.swingUp() end
+			if hardnessDown == 3 or hardnessDown == 10 then robot.swingDown() end
+  		end
+	end
+	while robot_position_y ~= new_position_y do
+   		if robot_position_y < new_position_y then
+      	  	table_sides[3][navigate.getFacing()]()
+			robot.swing()
+			robot.forward()
+     		_,_,robot_position_y = navigate.getPosition()
+			hardnessUp = geo.analyze(1).hardness 
+			hardnessDown = geo.analyze(0).hardness
+			if hardnessUp == 3 or hardnessUp == 10 then robot.swingUp() end
+			if hardnessDown == 3 or hardnessDown == 10 then robot.swingDown() end
+   		elseif robot_position_y > new_position_y then
+    		table_sides[2][navigate.getFacing()]()	
+			robot.swing()
+			robot.forward()
+			_,_,robot_position_y = navigate.getPosition()
+			hardnessUp = geo.analyze(1).hardness 
+			hardnessDown = geo.analyze(0).hardness
+			if hardnessUp == 3 or hardnessUp == 10 then robot.swingUp() end
+			if hardnessDown == 3 or hardnessDown == 10 then robot.swingDown() end
+   		end
+	end
+	while robot_position_z ~= new_position_z do
+		if robot_position_z < new_position_z then
+			robot.swingUp()
+			robot.up()
+			_,robot_position_z,_ = navigate.getPosition()
+		elseif robot_position_z > new_position_z then
+			robot.swingDown()
+			robot.down()
+			_,robot_position_z,_ = navigate.getPosition()
+		end
+	end
+end
 --двигает робота на позицию с выламыванием блоков перед собой(начало по у)
 function move_lib.swing_and_move_y_first(new_position_x, new_position_y, new_position_z)
 	local robot_position_x, robot_position_z, robot_position_y = navigate.getPosition()
