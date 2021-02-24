@@ -11,7 +11,7 @@ local planks_table
 local test_game_mode = false --если включен тестовый мод, то робот не будет проверять энергию
 --------------------------------------------------------------------------------------------
 --названия папок построек из гитхаба
-local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle"}
+local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle", "ballon"}
 --таблица опасных блоков(можно дополнять блоками, который робот будет игнорировать), в других местах код менять не надо
 local danger_blocks = {["minecraft:stone_button"] = "каменная кнопка",
 			["minecraft:tallgrass"] = "высокая трава",
