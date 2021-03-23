@@ -726,16 +726,16 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
 		inv.equip()
 	else
-		--moveLibrary.z_move(z + 1)
-		repeat until robot.up()
+		moveLibrary.z_move(z + 1)
+		--repeat until robot.up()
 		robot.select(stairs_slot_num)
 		inv.equip()
 		::try_again2::
+		computer.beep(400, 0.1)
+		computer.beep(1000, 0.1)
+		computer.beep(400, 0.1)
+		computer.beep(1000, 0.1)
 		robot.useDown()
-		computer.beep(400, 0.1)
-		computer.beep(1000, 0.1)
-		computer.beep(400, 0.1)
-		computer.beep(1000, 0.1)
 		moveLibrary.z_move(z)
 		local geoAnalyze2 = geo.analyze(0).name
 		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" or geoAnalyze2 == "minecraft:flowing_water" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("ЖДУ 3 СЕКУНДЫ", 3); goto try_again2 end
