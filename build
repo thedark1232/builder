@@ -726,7 +726,8 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
 		inv.equip()
 	else
-		moveLibrary.z_move(z + 1)
+		--moveLibrary.z_move(z + 1)
+		repeat until robot.up()
 		robot.select(stairs_slot_num)
 		inv.equip()
 		::try_again2::
