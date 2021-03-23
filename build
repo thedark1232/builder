@@ -11,7 +11,7 @@ local planks_table
 local test_game_mode = false --если включен тестовый мод, то робот не будет проверять энергию
 --------------------------------------------------------------------------------------------
 --названия папок построек из гитхаба
-local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle", "ballon"}
+local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle"}
 --таблица опасных блоков(можно дополнять блоками, который робот будет игнорировать), в других местах код менять не надо
 local danger_blocks = {["minecraft:stone_button"] = "каменная кнопка",
 			["minecraft:tallgrass"] = "высокая трава",
@@ -761,6 +761,7 @@ function build_blocks(block_number_slot, hopper, block_name)
 	computer.beep(1000, 0.1)
 	--deb_enter("проверяю на совпадение блока под собой")
 	if geo.analyze(0).name ~= block_name then
+		if geo.analyze(0).name == "minecraft:lit_redstone_lamp" then computer.beep(1000, 0.1); return end
 		computer.beep(400, 2)
 		deb("ЖДУ 3 СЕКУНДЫ", 3)
 		goto try_again3
