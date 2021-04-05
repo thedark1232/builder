@@ -321,74 +321,54 @@ function scheme_menu()
 	term.clear()
 	local file, fileName
 	file = io.open("ProgrammName")
-	if file == nil then
-		term.clear()
-		print("файл с названием программы не создан")
-		file = io.open("ProgrammName","w")
-		print("введи название программы")
-		::fileName_again::
-		fileName = io.read()
-		if fileName == "2" then os.exit() end
-		file:write(fileName)
-		file:close()
-		if fileName ~= nil then
-			print("ищу файл с названием "..fileName)
-			local try, _ = pcall(try_load_data_base, fileName)
-			if not try then
-				print("ФАЙЛ: " ..fileName.." НЕ НАЙДЕН, ЗАПИСАТЬ НОВОЕ НАЗВАНИЕ ПРОГРАММЫ, 2 = ВЫХОД")
-				goto fileName_again
-			end
-		else
-			print("введи название программы еще раз")
-			goto fileName_again
-		end
-		return
-	else
+	if file ~= nil then
 		fileName = file:read("*a")
 		file:close()
+	else
+		fileName = "отсутствует"
+		file:close()
+	end
 		file = io.open("ProgrammName","w")
 		                        --▀ █ ▄--
-	   print("█▀▀▀▀▀▀▀▀▀▀▀▀▀ УПРАВЛЕНИЕ  СХЕМАМИ: ▀▀▀▀▀▀▀▀▀▀▀▀▀█")
-	   print("█  1 - загрузка схемы:")
-	   print("█  2 - записать новой схемы                      █")
-	   print("█  3 - скачать схему из инета                    █")
-	   print("█  4 - открыть схему без pcall(дебаг)            █")
-	   print("█  0 - выход                                     █")
-	   print("█▄▄▄▄▄▄▄▄ УДАЛЕНИЕ СТАРЫХ СХЕМ ИЗ ПАПКИ: ▄▄▄▄▄▄▄▄█")
-	   print("█                                                █")
-	   print("█                                                █")
-	   print("█                                                █")
-	   print("█                                                █")
-	   print("█                                                █")
-	   print("█                                                █")
-	   print("█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█")
-	   print("█                                                █")
-	io.write("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█")
-	term.setCursor(23, 2)
-	io.write(fileName)
-	term.setCursor(50, 2)
-	io.write("█")
-	--проверка папки /usr/lib/ на наличии схем для удаления
-	local all_schems = {}
-	for scheme in fileSystem.list("/usr/lib/") do
-		if ignore_files[scheme] == nil then all_schems[#all_schems + 1] = scheme end
-	end
-	::chooseAgain::
-	for cl = 8, 13 do clear_input_window(2, cl, 48) end
-	for k, v in ipairs(all_schems) do
-		if k < 7 then
-			term.setCursor(3, k + 7)
-			io.write(k + 4 .. " - " .. v)
+	    print("█▀▀▀▀▀▀▀▀▀▀▀▀▀ УПРАВЛЕНИЕ  СХЕМАМИ: ▀▀▀▀▀▀▀▀▀▀▀▀▀█")
+	    print("█  1 - загрузка схемы:")
+	    print("█  2 - записать новой схемы                      █")
+	    print("█  3 - скачать схему из инета                    █")
+	    print("█  4 - открыть схему без pcall(дебаг)            █")
+	    print("█  0 - выход                                     █")
+	    print("█▄▄▄▄▄▄▄▄ УДАЛЕНИЕ СТАРЫХ СХЕМ ИЗ ПАПКИ: ▄▄▄▄▄▄▄▄█")
+	    print("█                                                █")
+	    print("█                                                █")
+	    print("█                                                █")
+	    print("█                                                █")
+	    print("█                                                █")
+	    print("█                                                █")
+	    print("█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█")
+	    print("█                                                █")
+	    io.write("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█")
+		term.setCursor(23, 2)
+		io.write(fileName)
+		term.setCursor(50, 2)
+		io.write("█")
+		--проверка папки /usr/lib/ на наличии схем для удаления
+		local all_schems = {}
+		for scheme in fileSystem.list("/usr/lib/") do if ignore_files[scheme] == nil then all_schems[#all_schems + 1] = scheme end end
+		::chooseAgain::
+		for cl = 8, 13 do clear_input_window(2, cl, 48) end
+		for k, v in ipairs(all_schems) do
+			if k < 7 then
+				term.setCursor(3, k + 7)
+				io.write(k + 4 .. " - " .. v)
+			end
 		end
-	end
-	clear_input_window(3, 15, 48); term.setCursor(3, 15)
-	io.write("ВВОД -> ")
+		clear_input_window(3, 15, 48); term.setCursor(3, 15)
+		io.write("ВВОД -> ")
 		local chose_mode = io.read()
 		if chose_mode == "5" or chose_mode == "6" or chose_mode == "7" or chose_mode == "8" or chose_mode == "9" or chose_mode == "10" then
 			all_schems = delete_scheme(tonumber(chose_mode), all_schems)
 			goto chooseAgain
 		end
-		if chose_mode == "1" then
+		if chose_mode == "1" and fileName ~= "отсутствует" then
 			clear_input_window(3, 15, 48); term.setCursor(3, 15)
 			io.write("ЗАГРУЗКА... ОБОЖДИ")
 			local try, _ = pcall(function() programm_t = require(fileName).build_pair() end)
@@ -447,7 +427,6 @@ function scheme_menu()
 			file:close()
 			os.exit()
 		end
-	end
 end
 ------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ, С СИЛЬНОЙ СВЯЗЬЮ-----------------------------------------------
@@ -1187,3 +1166,4 @@ do
 		computer.beep(800,0.5)
 	end
 end
+
