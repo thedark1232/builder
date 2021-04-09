@@ -684,7 +684,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		os.exit()
 	end
 	local _,z,_ = navigate.getPosition()
-	local size_place = 0
+	local size_place = 3
 	if metadata >= 4 then
 		first_slot_transfer() --переложить предмет из первого слота в любой другой
 		robot.select(to_first_slot)
@@ -693,8 +693,8 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		robot.select(stairs_slot_num)
 		robot.transferTo(to_first_slot)
 		robot.select(1)
+		robot.placeDown()	
 		::try_again2::
-		robot.placeDown(size_place)		
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
