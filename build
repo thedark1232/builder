@@ -700,14 +700,16 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
 		local geoAnalyze = geo.analyze(0).name
-		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" or geoAnalyze == "minecraft:flowing_water" then computer.beep(400, 2); deb("ЖДУ 3 СЕКУНДЫ", 3)
+		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" or geoAnalyze == "minecraft:flowing_water" then
+			computer.beep(400, 2); deb("ЖДУ 3 СЕКУНДЫ", 3)
 			if size_place == 0 then
 				size_place = 3
 			elseif size_place > 0 and size_place < 6 then
 				size_place = size_place + 1
 			elseif size_place > 5 then
 				size_place = 3
-			end			
+			end
+			robot.placeDown(size_place)
 			goto try_again2 
 		end
 		computer.beep(1000, 0.1)
