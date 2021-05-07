@@ -39,7 +39,7 @@ local danger_blocks = {["minecraft:stone_button"] = "каменная кнопк
 			["minecraft:lit_pumpkin"] = "светящаяся тыква джека",
 			["minecraft:dragon_egg"] = "яйцо дракона",
 			["minecraft:red_mushroom_block"] = "грибной блок",
-			["minecraft:light_weighted_pressure_plate"] = "золота нажимная плита"
+			["minecraft:light_weighted_pressure_plate"] = "золота нажимная плита",
 			["minecraft:gravel"] = "гравий",
 			["minecraft:coal_ore"] = "угольная руда",
 			["minecraft:trapped_chest"] = "сундук-ловушка",
