@@ -78,36 +78,32 @@ function find_way(x_first, y_first)
 			elseif field[stacks[i].x][stacks[i].y + 1] ~= nil and field[stacks[i].x][stacks[i].y + 1] == -2 then
 				table.insert(stacks, {x = stacks[i].x, y = stacks[i].y + 1})
 				nextStacksCount = nextStacksCount + 1
-				field[stacks[i].x][stacks[i].y + 1] = field[stacks[i].x][stacks[i].y] + 1
+				field[stacks[i].x][stacks[i].y + 1] = tonumber(field[stacks[i].x][stacks[i].y]) + 1
 				--printField()
-			
 			end
 			--deb_enter("проверка северной части")
 			if stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] == "m" then field[stacks[i].x + 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x + 1, stacks[i].y
 			elseif stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] ~= nil and field[stacks[i].x + 1][stacks[i].y] == -2 then
 				table.insert(stacks, {x = stacks[i].x + 1, y = stacks[i].y})
 				nextStacksCount = nextStacksCount + 1
-				field[stacks[i].x + 1][stacks[i].y] = field[stacks[i].x][stacks[i].y] + 1
+				field[stacks[i].x + 1][stacks[i].y] = tonumber(field[stacks[i].x][stacks[i].y]) + 1
 				--printField() 
-			
 			end
 			--deb_enter("проверка западной части")
 			if field[stacks[i].x][stacks[i].y - 1] == "m" then field[stacks[i].x][stacks[i].y - 1] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x, stacks[i].y - 1
 			elseif field[stacks[i].x][stacks[i].y - 1] ~= nil and field[stacks[i].x][stacks[i].y - 1] == -2 then
 				table.insert(stacks, {x = stacks[i].x, y = stacks[i].y - 1})
 				nextStacksCount = nextStacksCount + 1
-				field[stacks[i].x][stacks[i].y - 1] = field[stacks[i].x][stacks[i].y] + 1
+				field[stacks[i].x][stacks[i].y - 1] = tonumber(field[stacks[i].x][stacks[i].y]) + 1
 				--printField()
-			
 			end
 			--deb_enter("проверка южной части")
 			if stacks[i].x - 1 > -1 and field[stacks[i].x - 1][stacks[i].y] == "m" then field[stacks[i].x - 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x - 1, stacks[i].y
 			elseif stacks[i].x - 1 > -1 and field[stacks[i].x - 1][stacks[i].y] ~= nil and field[stacks[i].x - 1][stacks[i].y] == -2 then
 				table.insert(stacks, {x = stacks[i].x - 1, y = stacks[i].y})
 				nextStacksCount = nextStacksCount + 1
-				field[stacks[i].x - 1][stacks[i].y] = field[stacks[i].x][stacks[i].y] + 1
+				field[stacks[i].x - 1][stacks[i].y] = tonumber(field[stacks[i].x][stacks[i].y]) + 1
 				--printField()
-			
 			end
 		end
 		for rm = 1, stacksCount do
