@@ -11,7 +11,7 @@ local planks_table
 local test_game_mode = false --если включен тестовый мод, то робот не будет проверять энергию
 --------------------------------------------------------------------------------------------
 --названия папок построек из гитхаба
-local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle"}
+local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle", "ImperialCaphedral", "tank01"}
 --таблица опасных блоков(можно дополнять блоками, который робот будет игнорировать), в других местах код менять не надо
 local danger_blocks = {["minecraft:stone_button"] = "каменная кнопка",
 			["minecraft:tallgrass"] = "высокая трава",
@@ -29,7 +29,22 @@ local danger_blocks = {["minecraft:stone_button"] = "каменная кнопк
 			["minecraft:lava"] = "лава",
 			["minecraft:ladder"] = "лестница",
 			["minecraft:wooden_button"] = "деревянная кнопка",
-			["minecraft:flower_pot"] = "цветочный горшок"	
+			["minecraft:flower_pot"] = "цветочный горшок",
+			["minecraft:redstone_torch"] = "красный факел",
+			["minecraft:carpet"] = "ковер",
+			["minecraft:wall_sign"] = "навесная табличка",
+			["minecraft:standing_sign"] = "табличка",
+			["minecraft:chest"] = "сундук",
+			["minecraft:jukebox"] = "тыква джека",
+			["minecraft:lit_pumpkin"] = "светящаяся тыква джека",
+			["minecraft:dragon_egg"] = "яйцо дракона",
+			["minecraft:red_mushroom_block"] = "грибной блок",
+			["minecraft:light_weighted_pressure_plate"] = "золота нажимная плита"
+			["minecraft:gravel"] = "гравий",
+			["minecraft:coal_ore"] = "угольная руда",
+			["minecraft:trapped_chest"] = "сундук-ловушка",
+			["minecraft:piston"] = "поршень",
+			["minecraft:fence_gate"] = "калитка"
       }
 --игнорируемые файлы при составлении списка схем для удаления
 local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok", ["filesLibrary.lua"] = "ok"}
@@ -49,7 +64,7 @@ local modem_is_avalible --наличие модема
 local modem_robot_port, modem_comp_port --порты модема и компа, настраиваются в стартовой менюшке
 local file_programm_name, creat
 local navigate, geo, inv --компоненты
-local moveLibrary, table_sides, energyChecker, filesLibrary --библиотеки
+local moveLibrary, table_sides, energyChecker, filesLibrary, algorithmLi --библиотеки
 local last_block --номер последнего построенного блока в схеме
 local last_block_mode --булево значение(продолжает стройку с последнего места, либо начинает стройку заного)
 local block_number --хранит количество блоков в слое, нужно для главного цикла
@@ -693,7 +708,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		robot.select(stairs_slot_num)
 		robot.transferTo(to_first_slot)
 		robot.select(1)
-		robot.useDown()	
+		robot.useDown()
 		::try_again2::
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
@@ -1016,6 +1031,7 @@ do
 	energyChecker = components_and_librarys.getLibrary("energyChecker")
 	table_planks = components_and_librarys.getLibrary("table_planks").build_pair()
 	filesLibrary = components_and_librarys.getLibrary("filesLibrary")
+	algorithmLi = components_and_librarys.getLibrary("algorithmLi")
 	--------------------------------------------------------------------------------------
 	--присваивание переменных
 	inv_size = robot.inventorySize() --определение размера инвентаря робота
@@ -1078,13 +1094,14 @@ do
 	for sl = sl_plus, allSlay do
 		slayer = tostring(sl)
 		moveLibrary.z_move(start_position.z + tonumber(slayer) - robot_height) --выдвижение на высоту ввверх
+		programm_t[slayer] = algorithmLi(programm_t[slayer])
 		if not last_block_mode then --продолжение стройки, если выбран last_block_mode пользователем
 			block_number = #programm_t[slayer].x
 		else
 			block_number = tonumber(last_block)
 			last_block_mode = false
 		end
-		for i = block_number, 1, -1 do
+		for i = 1, block_number, 1, -1 do
 			move_block_from_robot_arm() --перемещение предмета руки робота, если он в нем есть, в любой свободный слот, кроме первого слота
 			hopper_block = false
 			---------------------ОПРЕДЕЛЕНИЕ ОПАСНЫХ БЛОКОВ----------------------------------
@@ -1100,6 +1117,7 @@ do
 				if programm_t_slayer_name_i == "minecraft:monster_egg" then programm_t[slayer].name[i] = "minecraft:stonebrick" end
 				if programm_t_slayer_name_i == "minecraft:hopper" then hopper_block = true end
 				if programm_t_slayer_name_i == "minecraft:mossy_cobblestone" then programm_t[slayer].name[i] = "minecraft:cobblestone" end
+				if programm_t_slayer_name_i == "minecraft:bedrock" then programm_t[slayer].name[i] = "minecraft:stone" end
 			else
 				programm_t[slayer].name[i] = "minecraft:trapdoor"
 			end
@@ -1179,3 +1197,4 @@ do
 		computer.beep(800,0.5)
 	end
 end
+
