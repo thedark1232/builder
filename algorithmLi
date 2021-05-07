@@ -118,10 +118,10 @@ function waysBilder.buildAllWays(table_ways)
 	local redirectedWays = {x = {}, y = {}, name = {}, meta = {}}
 
 	local next_wayX, next_wayY = 0, 0
-	for k, v in ipairs(table_ways.x) do
-		print(k .. " x: " .. v .. " y: " .. table_ways.y[k] .. " name: " .. table_ways.name[k] .. " meta: " .. table_ways.meta[k])
-	end
-	deb_enter("таблица построена")
+	-- for k, v in ipairs(table_ways.x) do
+		-- print(k .. " x: " .. v .. " y: " .. table_ways.y[k] .. " name: " .. table_ways.name[k] .. " meta: " .. table_ways.meta[k])
+	-- end
+	-- deb_enter("таблица построена")
 	createBaseField(table_ways, next_wayX, next_wayY)
 	for i = 1, #table_ways.x do
 		next_wayX, next_wayY = find_way(next_wayX, next_wayY)
@@ -136,9 +136,9 @@ function waysBilder.buildAllWays(table_ways)
 		table.remove(table_ways.meta, remove_value)
 		createBaseField(table_ways, next_wayX, next_wayY)
 	end
-	for k, v in ipairs(redirectedWays.x) do
-		print(k .. " x: " .. v .. " y: " .. redirectedWays.y[k] .. " name " .. redirectedWays.name[k] .. " meta " .. redirectedWays.meta[k])
-	end
+	-- for k, v in ipairs(redirectedWays.x) do
+		-- print(k .. " x: " .. v .. " y: " .. redirectedWays.y[k] .. " name " .. redirectedWays.name[k] .. " meta " .. redirectedWays.meta[k])
+	-- end
 	return redirectedWays
 end
 
