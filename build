@@ -1101,7 +1101,7 @@ do
 			block_number = tonumber(last_block)
 			last_block_mode = false
 		end
-		for i = 1, block_number, 1, -1 do
+		for i = block_number, 1, -1 do
 			move_block_from_robot_arm() --перемещение предмета руки робота, если он в нем есть, в любой свободный слот, кроме первого слота
 			hopper_block = false
 			---------------------ОПРЕДЕЛЕНИЕ ОПАСНЫХ БЛОКОВ----------------------------------
