@@ -44,10 +44,9 @@ local danger_blocks = {["minecraft:stone_button"] = "каменная кнопк
 			["minecraft:coal_ore"] = "угольная руда",
 			["minecraft:trapped_chest"] = "сундук-ловушка",
 			["minecraft:piston"] = "поршень",
-			["minecraft:fence_gate"] = "калитка"
-      }
+			["minecraft:fence_gate"] = "калитка"}
 --игнорируемые файлы при составлении списка схем для удаления
-local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok", ["filesLibrary.lua"] = "ok"}
+local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok", ["filesLibrary.lua"] = "ok", ["algorithmLi.lua"] = "ok"}
 --игнорируемые блоки при определении высоты
 local ignore_block_height = {["minecraft:air"] = "ok", ["Thaumcraft:blockAiry"] = "ok", ["OpenComputers:robot"] = "ok", ["minecraft:water"] = "ok", ["minecraft:flowing_water"] = "ok"}
 --------------------------------------------------------------------------------------------
@@ -1094,7 +1093,7 @@ do
 	for sl = sl_plus, allSlay do
 		slayer = tostring(sl)
 		moveLibrary.z_move(start_position.z + tonumber(slayer) - robot_height) --выдвижение на высоту ввверх
-		programm_t[slayer] = algorithmLi(programm_t[slayer])
+		programm_t[slayer] = algorithmLi.buildAllWays(programm_t[slayer])
 		if not last_block_mode then --продолжение стройки, если выбран last_block_mode пользователем
 			block_number = #programm_t[slayer].x
 		else
@@ -1197,4 +1196,3 @@ do
 		computer.beep(800,0.5)
 	end
 end
-
