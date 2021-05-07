@@ -24,19 +24,20 @@ function find_key_by_values(t, v1, v2)
 	for k, _ in ipairs(t.x) do
 		if t.x[k] == v1 and t.y[k] == v2 then return k, t.name[k], t.meta[k] end
 	end
+	--deb_enter("заданные координаты " .. v1 .. " " .. v2 .. " не найдены")
 end
 
 function createBaseField(points_table, start_pointX, start_pointY)
-	for x = 0, 15 do
+	for x = 0, 16 do
 		field[x] = {}
-		for y = 0,15 do
+		for y = 0,16 do
 			field[x][y] = -2
 		end
 	end
 	for i = 1, #points_table.x do
 		field[points_table.x[i] - 1][points_table.y[i]] = "m"
 	end
-	field[start_pointX - 1][start_pointY] = 0
+	field[start_pointX][start_pointY] = 0
 	--printField()
 	--deb_enter("поле создано")
 end
@@ -45,8 +46,8 @@ function printField(finish_x, finish_y)
   --m - это точки, к которым надо стремиться добраться
 	local space
   print(" ------------------------------------------------")
-	for x = 15, 0, -1 do
-		for y = 0, 14 do
+	for x = 16, 0, -1 do
+		for y = 0, 15 do
 			if field[x][y] ~= "m" and field[x][y] > -1 and field[x][y] < 10 then space = "  " 
 			elseif field[x][y] == "m" then space = "  "
 			else space = " " end
@@ -55,8 +56,8 @@ function printField(finish_x, finish_y)
 			else io.write(space .. tostring(field[x][y]))
 			end
 		end
-			if x == finish_x and 15 == finish_y then io.write(space .. "f" .. "\n")
-			else io.write(space .. field[x][15] .. "\n")
+			if x == finish_x and 16 == finish_y then io.write(space .. "f" .. "\n")
+			else io.write(space .. field[x][16] .. "\n")
 			end
 	end
   print(" ------------------------------------------------")
@@ -78,32 +79,32 @@ function find_way(x_first, y_first)
 			elseif field[stacks[i].x][stacks[i].y + 1] ~= nil and field[stacks[i].x][stacks[i].y + 1] == -2 then
 				table.insert(stacks, {x = stacks[i].x, y = stacks[i].y + 1})
 				nextStacksCount = nextStacksCount + 1
-				field[stacks[i].x][stacks[i].y + 1] = tonumber(field[stacks[i].x][stacks[i].y]) + 1
-				--printField()
+				field[stacks[i].x][stacks[i].y + 1] = field[stacks[i].x][stacks[i].y] + 1
+				printField()
 			end
 			--deb_enter("проверка северной части")
-			if stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] == "m" then field[stacks[i].x + 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x + 1, stacks[i].y
+			if stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] == "m" then field[stacks[i].x + 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; printField(); return stacks[i].x + 1, stacks[i].y
 			elseif stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] ~= nil and field[stacks[i].x + 1][stacks[i].y] == -2 then
 				table.insert(stacks, {x = stacks[i].x + 1, y = stacks[i].y})
 				nextStacksCount = nextStacksCount + 1
-				field[stacks[i].x + 1][stacks[i].y] = tonumber(field[stacks[i].x][stacks[i].y]) + 1
-				--printField() 
+				field[stacks[i].x + 1][stacks[i].y] = field[stacks[i].x][stacks[i].y] + 1
+				printField() 
 			end
 			--deb_enter("проверка западной части")
 			if field[stacks[i].x][stacks[i].y - 1] == "m" then field[stacks[i].x][stacks[i].y - 1] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x, stacks[i].y - 1
 			elseif field[stacks[i].x][stacks[i].y - 1] ~= nil and field[stacks[i].x][stacks[i].y - 1] == -2 then
 				table.insert(stacks, {x = stacks[i].x, y = stacks[i].y - 1})
 				nextStacksCount = nextStacksCount + 1
-				field[stacks[i].x][stacks[i].y - 1] = tonumber(field[stacks[i].x][stacks[i].y]) + 1
-				--printField()
+				field[stacks[i].x][stacks[i].y - 1] = field[stacks[i].x][stacks[i].y] + 1
+				printField()
 			end
 			--deb_enter("проверка южной части")
 			if stacks[i].x - 1 > -1 and field[stacks[i].x - 1][stacks[i].y] == "m" then field[stacks[i].x - 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x - 1, stacks[i].y
 			elseif stacks[i].x - 1 > -1 and field[stacks[i].x - 1][stacks[i].y] ~= nil and field[stacks[i].x - 1][stacks[i].y] == -2 then
 				table.insert(stacks, {x = stacks[i].x - 1, y = stacks[i].y})
 				nextStacksCount = nextStacksCount + 1
-				field[stacks[i].x - 1][stacks[i].y] = tonumber(field[stacks[i].x][stacks[i].y]) + 1
-				--printField()
+				field[stacks[i].x - 1][stacks[i].y] = field[stacks[i].x][stacks[i].y] + 1
+				printField()
 			end
 		end
 		for rm = 1, stacksCount do
@@ -117,17 +118,20 @@ end
 function waysBilder.buildAllWays(table_ways)
 	local redirectedWays = {x = {}, y = {}, name = {}, meta = {}}
 
-	local next_wayX, next_wayY = 1, 0
+	local next_wayX, next_wayY = 0, 0
 	-- for k, v in ipairs(table_ways.x) do
 		-- print(k .. " x: " .. v .. " y: " .. table_ways.y[k] .. " name: " .. table_ways.name[k] .. " meta: " .. table_ways.meta[k])
 	-- end
 	-- deb_enter("таблица построена")
 	createBaseField(table_ways, next_wayX, next_wayY)
+	
 	for i = 1, #table_ways.x do
+		-- printField()
+		-- deb_enter("начальное поле")
 		next_wayX, next_wayY = find_way(next_wayX, next_wayY)
 		table.insert(redirectedWays.x, next_wayX)
 		table.insert(redirectedWays.y, next_wayY)
-		local remove_value, name, meta = find_key_by_values(table_ways, next_wayX, next_wayY)
+		local remove_value, name, meta = find_key_by_values(table_ways, next_wayX + 1, next_wayY)
 		table.insert(redirectedWays.name, name)
 		table.insert(redirectedWays.meta, meta)
 		table.remove(table_ways.x, remove_value)
@@ -135,6 +139,8 @@ function waysBilder.buildAllWays(table_ways)
 		table.remove(table_ways.name, remove_value)
 		table.remove(table_ways.meta, remove_value)
 		createBaseField(table_ways, next_wayX, next_wayY)
+		--printField()
+		--deb_enter("окончательное поле")
 	end
 	-- for k, v in ipairs(redirectedWays.x) do
 		-- print(k .. " x: " .. v .. " y: " .. redirectedWays.y[k] .. " name " .. redirectedWays.name[k] .. " meta " .. redirectedWays.meta[k])
@@ -142,6 +148,7 @@ function waysBilder.buildAllWays(table_ways)
 	return redirectedWays
 end
 
+--waysBilder.buildAllWays(t["1"])
 --waysBilder.buildAllWays(test_points)
 
 return waysBilder
