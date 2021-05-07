@@ -1,0 +1,147 @@
+local waysBilder = {}
+local field = {}
+
+-- local test_points = {x = {}, y = {}, name = {}, meta = {}}
+
+-- test_points.x[1] = 2; test_points.y[1] = 0; test_points.name[1] = "один"; test_points.meta[1] = 1
+-- test_points.x[2] = 2; test_points.y[2] = 2; test_points.name[2] = "два"; test_points.meta[2] = 2
+-- test_points.x[3] = 2; test_points.y[3] = 4; test_points.name[3] = "три"; test_points.meta[3] = 3
+-- test_points.x[4] = 2; test_points.y[4] = 7; test_points.name[4] = "четыре"; test_points.meta[4] = 4
+-- test_points.x[5] = 2; test_points.y[5] = 10; test_points.name[5] = "пять"; test_points.meta[5] = 5
+-- test_points.x[6] = 4; test_points.y[6] = 6; test_points.name[6] = "шесть"; test_points.meta[6] = 6
+-- test_points.x[7] = 5; test_points.y[7] = 9; test_points.name[7] = "семь"; test_points.meta[7] = 7
+-- test_points.x[8] = 6; test_points.y[8] = 11; test_points.name[8] = "восемь"; test_points.meta[8] = 8
+-- test_points.x[9] = 7; test_points.y[9] = 15; test_points.name[9] = "девять"; test_points.meta[9] = 9
+-- test_points.x[10] = 8; test_points.y[10] = 0; test_points.name[10] = "десять"; test_points.meta[10] = 10
+-- test_points.x[1] = 15; test_points.y[1] = 15; test_points.name[11] = "одиннадцать"; test_points.meta[11] = 11
+
+function deb_enter(text)
+    io.write(text)
+    local lol = io.read()
+end
+
+function find_key_by_values(t, v1, v2)
+	for k, _ in ipairs(t.x) do
+		if t.x[k] == v1 and t.y[k] == v2 then return k, t.name[k], t.meta[k] end
+	end
+end
+
+function createBaseField(points_table, start_pointX, start_pointY)
+	for x = 0, 15 do
+		field[x] = {}
+		for y = 0,15 do
+			field[x][y] = -2
+		end
+	end
+	for i = 1, #points_table.x do
+		field[points_table.x[i]][points_table.y[i]] = "m"
+	end
+	field[start_pointX][start_pointY] = 0
+	--printField()
+	--deb_enter("поле создано")
+end
+
+function printField(finish_x, finish_y)
+  --m - это точки, к которым надо стремиться добраться
+	local space
+  print(" ------------------------------------------------")
+	for x = 15, 0, -1 do
+		for y = 0, 14 do
+			if field[x][y] ~= "m" and field[x][y] > -1 and field[x][y] < 10 then space = "  " 
+			elseif field[x][y] == "m" then space = "  "
+			else space = " " end
+			
+			if x == finish_x and y == finish_y then io.write(space .. "f")
+			else io.write(space .. tostring(field[x][y]))
+			end
+		end
+			if x == finish_x and 15 == finish_y then io.write(space .. "f" .. "\n")
+			else io.write(space .. field[x][15] .. "\n")
+			end
+	end
+  print(" ------------------------------------------------")
+end
+
+function find_way(x_first, y_first)
+	local save_x_first, save_y_first = x_first, y_first
+    local stacks = {}
+	local waysCount = 0
+    stacks[1] = {x = x_first, y = y_first}
+    local stacksCount, nextStacksCount = 1, 0
+    while true do 
+		waysCount = waysCount + 1
+		if waysCount > 1000 then deb_enter("произведено более 1000 ходов") end
+		for i = 1, #stacks do
+			nextStacksCount = 0
+			--deb_enter("проверка восточной части")
+			if field[stacks[i].x][stacks[i].y + 1] ~= nil and field[stacks[i].x][stacks[i].y + 1] == -2 then
+				table.insert(stacks, {x = stacks[i].x, y = stacks[i].y + 1})
+				nextStacksCount = nextStacksCount + 1
+				field[stacks[i].x][stacks[i].y + 1] = field[stacks[i].x][stacks[i].y] + 1
+				--printField()
+			elseif field[stacks[i].x][stacks[i].y + 1] == "m" then field[stacks[i].x][stacks[i].y + 1] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x, stacks[i].y + 1
+			end
+			--deb_enter("проверка северной части")
+			if stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] ~= nil and field[stacks[i].x + 1][stacks[i].y] == -2 then
+				table.insert(stacks, {x = stacks[i].x + 1, y = stacks[i].y})
+				nextStacksCount = nextStacksCount + 1
+				field[stacks[i].x + 1][stacks[i].y] = field[stacks[i].x][stacks[i].y] + 1
+				--printField() 
+			elseif stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] == "m" then field[stacks[i].x + 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x + 1, stacks[i].y
+			end
+			--deb_enter("проверка западной части")
+			if field[stacks[i].x][stacks[i].y - 1] ~= nil and field[stacks[i].x][stacks[i].y - 1] == -2 then
+				table.insert(stacks, {x = stacks[i].x, y = stacks[i].y - 1})
+				nextStacksCount = nextStacksCount + 1
+				field[stacks[i].x][stacks[i].y - 1] = field[stacks[i].x][stacks[i].y] + 1
+				--printField()
+			elseif field[stacks[i].x][stacks[i].y - 1] == "m" then field[stacks[i].x][stacks[i].y - 1] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x, stacks[i].y - 1
+			end
+			--deb_enter("проверка южной части")
+			if stacks[i].x - 1 > -1 and field[stacks[i].x - 1][stacks[i].y] ~= nil and field[stacks[i].x - 1][stacks[i].y] == -2 then
+				table.insert(stacks, {x = stacks[i].x - 1, y = stacks[i].y})
+				nextStacksCount = nextStacksCount + 1
+				field[stacks[i].x - 1][stacks[i].y] = field[stacks[i].x][stacks[i].y] + 1
+				--printField()
+			elseif stacks[i].x - 1 > -1 and field[stacks[i].x - 1][stacks[i].y] == "m" then field[stacks[i].x - 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x - 1, stacks[i].y
+			end
+		end
+		for rm = 1, stacksCount do
+			table.remove(stacks, stacksCount)
+		end
+		stacksCount = nextStacksCount
+		nextStacksCount = 0
+	end
+end
+
+function waysBilder.buildAllWays(table_ways)
+	local redirectedWays = {x = {}, y = {}, name = {}, meta = {}}
+
+	local next_wayX, next_wayY = 0, 0
+	for k, v in ipairs(table_ways.x) do
+		print(k .. " x: " .. v .. " y: " .. table_ways.y[k] .. " name: " .. table_ways.name[k] .. " meta: " .. table_ways.meta[k])
+	end
+	deb_enter("таблица построена")
+	createBaseField(table_ways, next_wayX, next_wayY)
+	for i = 1, #table_ways.x do
+		next_wayX, next_wayY = find_way(next_wayX, next_wayY)
+		table.insert(redirectedWays.x, next_wayX)
+		table.insert(redirectedWays.y, next_wayY)
+		local remove_value, name, meta = find_key_by_values(table_ways, next_wayX, next_wayY)
+		table.insert(redirectedWays.name, name)
+		table.insert(redirectedWays.meta, meta)
+		table.remove(table_ways.x, remove_value)
+		table.remove(table_ways.y, remove_value)
+		table.remove(table_ways.name, remove_value)
+		table.remove(table_ways.meta, remove_value)
+		createBaseField(table_ways, next_wayX, next_wayY)
+	end
+	for k, v in ipairs(redirectedWays.x) do
+		print(k .. " x: " .. v .. " y: " .. redirectedWays.y[k] .. " name " .. redirectedWays.name[k] .. " meta " .. redirectedWays.meta[k])
+	end
+	return redirectedWays
+end
+
+--waysBilder.buildAllWays(test_points)
+
+return waysBilder
