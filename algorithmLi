@@ -34,9 +34,9 @@ function createBaseField(points_table, start_pointX, start_pointY)
 		end
 	end
 	for i = 1, #points_table.x do
-		field[points_table.x[i]][points_table.y[i]] = "m"
+		field[points_table.x[i] - 1][points_table.y[i]] = "m"
 	end
-	field[start_pointX][start_pointY] = 0
+	field[start_pointX - 1][start_pointY] = 0
 	--printField()
 	--deb_enter("поле создано")
 end
