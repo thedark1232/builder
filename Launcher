@@ -1,6 +1,7 @@
 local filesystem = require "filesystem"
 local component = require "component"
 local robot = require "robot"
+local computer = require "computer"
 local inv = component.inventory_controller
 
 local librarys = {["energyChecker"] = {"/usr/lib/energyChecker.lua", "https://raw.githubusercontent.com/thedark1232/builder/main/energyChecker"},
@@ -55,4 +56,5 @@ do
 			end
 		end
 	end
+	computer.shutdown(true)
 end
