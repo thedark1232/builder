@@ -45,7 +45,7 @@ end
 function printField(finish_x, finish_y)
   --m - это точки, к которым надо стремиться добраться
 	local space
-  print(" ------------------------------------------------")
+  --print(" ------------------------------------------------")
 	for x = 16, 0, -1 do
 		for y = 0, 15 do
 			if field[x][y] ~= "m" and field[x][y] > -1 and field[x][y] < 10 then space = "  " 
@@ -60,7 +60,7 @@ function printField(finish_x, finish_y)
 			else io.write(space .. field[x][16] .. "\n")
 			end
 	end
-  print(" ------------------------------------------------")
+  --print(" ------------------------------------------------")
 end
 
 function find_way(x_first, y_first)
@@ -80,15 +80,15 @@ function find_way(x_first, y_first)
 				table.insert(stacks, {x = stacks[i].x, y = stacks[i].y + 1})
 				nextStacksCount = nextStacksCount + 1
 				field[stacks[i].x][stacks[i].y + 1] = field[stacks[i].x][stacks[i].y] + 1
-				printField()
+				--printField()
 			end
 			--deb_enter("проверка северной части")
-			if stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] == "m" then field[stacks[i].x + 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; printField(); return stacks[i].x + 1, stacks[i].y
+			if stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] == "m" then field[stacks[i].x + 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x + 1, stacks[i].y
 			elseif stacks[i].x + 1 < 16 and field[stacks[i].x + 1][stacks[i].y] ~= nil and field[stacks[i].x + 1][stacks[i].y] == -2 then
 				table.insert(stacks, {x = stacks[i].x + 1, y = stacks[i].y})
 				nextStacksCount = nextStacksCount + 1
 				field[stacks[i].x + 1][stacks[i].y] = field[stacks[i].x][stacks[i].y] + 1
-				printField() 
+				--printField() 
 			end
 			--deb_enter("проверка западной части")
 			if field[stacks[i].x][stacks[i].y - 1] == "m" then field[stacks[i].x][stacks[i].y - 1] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x, stacks[i].y - 1
@@ -96,7 +96,7 @@ function find_way(x_first, y_first)
 				table.insert(stacks, {x = stacks[i].x, y = stacks[i].y - 1})
 				nextStacksCount = nextStacksCount + 1
 				field[stacks[i].x][stacks[i].y - 1] = field[stacks[i].x][stacks[i].y] + 1
-				printField()
+				--printField()
 			end
 			--deb_enter("проверка южной части")
 			if stacks[i].x - 1 > -1 and field[stacks[i].x - 1][stacks[i].y] == "m" then field[stacks[i].x - 1][stacks[i].y] = 0; field[save_x_first][save_y_first] = -2; return stacks[i].x - 1, stacks[i].y
@@ -104,7 +104,7 @@ function find_way(x_first, y_first)
 				table.insert(stacks, {x = stacks[i].x - 1, y = stacks[i].y})
 				nextStacksCount = nextStacksCount + 1
 				field[stacks[i].x - 1][stacks[i].y] = field[stacks[i].x][stacks[i].y] + 1
-				printField()
+				--printField()
 			end
 		end
 		for rm = 1, stacksCount do
