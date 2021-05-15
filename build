@@ -51,6 +51,7 @@ local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", 
 local ignore_block_height = {["minecraft:air"] = "ok", ["Thaumcraft:blockAiry"] = "ok", ["OpenComputers:robot"] = "ok", ["minecraft:water"] = "ok", ["minecraft:flowing_water"] = "ok"}
 --------------------------------------------------------------------------------------------
 local done_load = false --первоначальная проверка загружаемых библиотек
+local how_many_chanks = 1
 local pair_count  = 0 --количество своев в таблице, высчитывается при стартовых проверках
 local count_names_blocks = {} --подсчитывает в функции таблицу имен блоков в чанке, для вывода через print()
 local names_blocks = {} --а это сами названия блоков
@@ -1070,6 +1071,14 @@ do
 			term.clear(); print("программа завершена"); os.exit()
 		end
 	end
+	--определение количества чанков по оси хранит
+	term.clear()
+	print("НАСТРОЙКИ АЛГОРИТМА ЛИ")
+	print("определение количества чанков в ширину по Х оси")
+	print("1: - 1 чанк 17 блоков")
+	print("2: - 2 чанка 33 блока")
+	print("3: - 3 чанка 49 блоков")
+	how_many_chanks = pcall_return_num(1, 3)
 	--определение количества складов в постройке
 	term.clear()
 	print("определение количества складов с блоками:")
@@ -1093,7 +1102,7 @@ do
 	for sl = sl_plus, allSlay do
 		slayer = tostring(sl)
 		moveLibrary.z_move(start_position.z + tonumber(slayer) - robot_height) --выдвижение на высоту ввверх
-		programm_t[slayer] = algorithmLi.buildAllWays(programm_t[slayer])
+		programm_t[slayer] = algorithmLi.buildAllWays(programm_t[slayer], how_many_chanks)
 		if not last_block_mode then --продолжение стройки, если выбран last_block_mode пользователем
 			block_number = #programm_t[slayer].x
 		else
