@@ -117,7 +117,7 @@ end
 
 function waysBilder.buildAllWays(table_ways, maxX)
 	local redirectedWays = {x = {}, y = {}, name = {}, meta = {}}
-
+	maxX = tonumber(maxX)
 	local next_wayX, next_wayY = 0, 0
 	-- for k, v in ipairs(table_ways.x) do
 		-- print(k .. " x: " .. v .. " y: " .. table_ways.y[k] .. " name: " .. table_ways.name[k] .. " meta: " .. table_ways.meta[k])
