@@ -1084,7 +1084,7 @@ do
 	elseif chanks_num == 2 then
 		how_many_chanks = 33
 	elseif chanks_num == 3 then
-		how_many_chanks == 49
+		how_many_chanks = 49
 	end
 	--определение количества складов в постройке
 	term.clear()
