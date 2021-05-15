@@ -1071,14 +1071,21 @@ do
 			term.clear(); print("программа завершена"); os.exit()
 		end
 	end
-	--определение количества чанков по оси хранит
+	--определение количества чанков по оси х
 	term.clear()
 	print("НАСТРОЙКИ АЛГОРИТМА ЛИ")
 	print("определение количества чанков в ширину по Х оси")
 	print("1: - 1 чанк 17 блоков")
 	print("2: - 2 чанка 33 блока")
 	print("3: - 3 чанка 49 блоков")
-	how_many_chanks = pcall_return_num(1, 3)
+	local chanks_num = pcall_return_num(1, 3)
+	if chanks_num == 1 then
+		how_many_chanks = 17
+	elseif chanks_num == 2 then
+		how_many_chanks = 33
+	elseif chanks_num == 3 then
+		how_many_chanks == 49
+	end
 	--определение количества складов в постройке
 	term.clear()
 	print("определение количества складов с блоками:")
