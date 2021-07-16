@@ -11,7 +11,7 @@ local planks_table
 local test_game_mode = false --если включен тестовый мод, то робот не будет проверять энергию
 --------------------------------------------------------------------------------------------
 --названия папок построек из гитхаба
-local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle", "ImperialCaphedral", "tank01"}
+local build_dir_table = {"chiken", "castle_shop", "chrismas_tree_5and5", "home01", "tower", "angel", "ship1", "ship2", "pvp_spawn", "vitruvian_castle", "ImperialCaphedral", "tank01", "castleShop2"}
 --таблица опасных блоков(можно дополнять блоками, который робот будет игнорировать), в других местах код менять не надо
 local danger_blocks = {["minecraft:stone_button"] = "каменная кнопка",
 			["minecraft:tallgrass"] = "высокая трава",
@@ -44,7 +44,8 @@ local danger_blocks = {["minecraft:stone_button"] = "каменная кнопк
 			["minecraft:coal_ore"] = "угольная руда",
 			["minecraft:trapped_chest"] = "сундук-ловушка",
 			["minecraft:piston"] = "поршень",
-			["minecraft:fence_gate"] = "калитка"}
+			["minecraft:fence_gate"] = "калитка",
+			["minecraft:fire"] = "огонь"}
 --игнорируемые файлы при составлении списка схем для удаления
 local ignore_files = {["energyChecker.lua"] = "ok", ["moveLibrary.lua"] = "ok", ["sizeLibrary.lua"] = "ok", ["table_planks.lua"] = "ok", ["filesLibrary.lua"] = "ok", ["algorithmLi.lua"] = "ok"}
 --игнорируемые блоки при определении высоты
@@ -52,7 +53,7 @@ local ignore_block_height = {["minecraft:air"] = "ok", ["Thaumcraft:blockAiry"] 
 --------------------------------------------------------------------------------------------
 local done_load = false --первоначальная проверка загружаемых библиотек
 local how_many_chanks = 1
-local pair_count  = 0 --количество своев в таблице, высчитывается при стартовых проверках
+local pair_count = 0 --количество своев в таблице, высчитывается при стартовых проверках
 local count_names_blocks = {} --подсчитывает в функции таблицу имен блоков в чанке, для вывода через print()
 local names_blocks = {} --а это сами названия блоков
 components_and_librarys = {}
