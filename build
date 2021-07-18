@@ -342,7 +342,6 @@ function scheme_menu()
 		file:close()
 	else
 		fileName = "отсутствует"
-		file:close()
 	end
 		file = io.open("ProgrammName","w")
 		                        --▀ █ ▄--
