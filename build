@@ -1133,6 +1133,8 @@ do
 				if programm_t_slayer_name_i == "minecraft:hopper" then hopper_block = true end
 				if programm_t_slayer_name_i == "minecraft:mossy_cobblestone" then programm_t[slayer].name[i] = "minecraft:cobblestone" end
 				if programm_t_slayer_name_i == "minecraft:bedrock" then programm_t[slayer].name[i] = "minecraft:stone" end
+				if programm_t_slayer_name_i == "minecraft:hopper" then programm_t[slayer].name[i] = "minecraft:stone" end
+				
 			else
 				programm_t[slayer].name[i] = "minecraft:trapdoor"
 			end
@@ -1212,3 +1214,4 @@ do
 		computer.beep(800,0.5)
 	end
 end
+
