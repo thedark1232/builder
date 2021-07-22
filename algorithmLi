@@ -71,7 +71,7 @@ function find_way(x_first, y_first, maxX)
     local stacksCount, nextStacksCount = 1, 0
     while true do 
 		waysCount = waysCount + 1
-		if waysCount > 1000 then deb_enter("произведено более 1000 ходов") end
+		if waysCount > 1000 then return x_first, y_first end
 		for i = 1, #stacks do
 			nextStacksCount = 0
 			--deb_enter("проверка восточной части")
