@@ -1,6 +1,7 @@
 --движение с запада на восток со смещением на юг
 --вторая версия билдера, роботы и склады расположены над постройкой(не мешают соседним чанкам) 
 --дорожки из блоков для склада нужно ставить, а ограничители нет. Робот остановится, когда под ним будет minecraft:air (пустота)
+-- wget https://raw.githubusercontent.com/thedark1232/builder/main/Builder3.lua /home/builder3
 component = require("component")
 local fileSystem = require("filesystem")
 local computer = require("computer")
@@ -780,6 +781,7 @@ end
 --аргументы(доски находятся в нижнем положении?, это двойные доски?)
 function build_planks(it_is_down, it_is_bouble)
 	local stone_or_wood = ""
+	local yBeJIu4eHue_BpeMeHu_oJugaHu9l = 0
 	local _,mov_z,_ = navigate.getPosition()
 	--ставит планку с самого низу
 	if it_is_down and it_is_bouble == false then
@@ -790,12 +792,15 @@ function build_planks(it_is_down, it_is_bouble)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
+		os.sleep(yBeJIu4eHue_BpeMeHu_oJugaHu9l)
 		robot.useDown()
 		moveLibrary.z_move(mov_z)
 		local geoAnalyze = geo.analyze(0).name
 		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" or geoAnalyze == "minecraft:flowing_water" then
 			computer.beep(400, 2)
 			deb("ЖДУ 3 СЕКУНДЫ", 3)
+			yBeJIu4eHue_BpeMeHu_oJugaHu9l = yBeJIu4eHue_BpeMeHu_oJugaHu9l + 1
+			if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 Then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
 			goto build_again
 		end
 		computer.beep(1000, 0.1)
@@ -812,12 +817,15 @@ function build_planks(it_is_down, it_is_bouble)
 		computer.beep(1000, 0.1)
 		robot.useDown()
 		::build_again2::
+		os.sleep(yBeJIu4eHue_BpeMeHu_oJugaHu9l)
 		robot.useDown()
 		moveLibrary.z_move(mov_z)
 			if geo.analyze(0).name ~= stone_or_wood then
 				moveLibrary.z_move(mov_z + 1)
 				computer.beep(400, 2)
 				deb("ЖДУ 3 СЕКУНДЫ", 3)
+				yBeJIu4eHue_BpeMeHu_oJugaHu9l = yBeJIu4eHue_BpeMeHu_oJugaHu9l + 1
+				if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 Then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
 				goto build_again2
 			end
 		computer.beep(1000, 0.1)
@@ -828,11 +836,14 @@ function build_planks(it_is_down, it_is_bouble)
 		robot.transferTo(1)
 		--moveLibrary.z_move(mov_z - 1)
 		::build_again3::
+		os.sleep(yBeJIu4eHue_BpeMeHu_oJugaHu9l)
 		robot.useDown()
 		local geoAnalyze2 = geo.analyze(0).name
 		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" or geoAnalyze2 == "minecraft:flowing_water" then
 			computer.beep(400, 2)
 			deb("ЖДУ 3 СЕКУНДЫ", 3)
+			yBeJIu4eHue_BpeMeHu_oJugaHu9l = yBeJIu4eHue_BpeMeHu_oJugaHu9l + 1
+			if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 Then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
 			goto build_again3
 		end
 		first_slot_transfer()
