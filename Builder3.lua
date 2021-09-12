@@ -800,7 +800,7 @@ function build_planks(it_is_down, it_is_bouble)
 			computer.beep(400, 2)
 			deb("ЖДУ 3 СЕКУНДЫ", 3)
 			yBeJIu4eHue_BpeMeHu_oJugaHu9l = yBeJIu4eHue_BpeMeHu_oJugaHu9l + 1
-			if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 Then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
+			if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
 			goto build_again
 		end
 		computer.beep(1000, 0.1)
@@ -825,7 +825,7 @@ function build_planks(it_is_down, it_is_bouble)
 				computer.beep(400, 2)
 				deb("ЖДУ 3 СЕКУНДЫ", 3)
 				yBeJIu4eHue_BpeMeHu_oJugaHu9l = yBeJIu4eHue_BpeMeHu_oJugaHu9l + 1
-				if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 Then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
+				if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
 				goto build_again2
 			end
 		computer.beep(1000, 0.1)
@@ -843,7 +843,7 @@ function build_planks(it_is_down, it_is_bouble)
 			computer.beep(400, 2)
 			deb("ЖДУ 3 СЕКУНДЫ", 3)
 			yBeJIu4eHue_BpeMeHu_oJugaHu9l = yBeJIu4eHue_BpeMeHu_oJugaHu9l + 1
-			if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 Then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
+			if yBeJIu4eHue_BpeMeHu_oJugaHu9l > 5 then yBeJIu4eHue_BpeMeHu_oJugaHu9l = 5 end
 			goto build_again3
 		end
 		first_slot_transfer()
