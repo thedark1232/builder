@@ -1165,7 +1165,7 @@ do
 				--определение оставшегося количества энергии
 				if not test_game_mode then check_energy_in_line(energyMinimym) end
 				--выдвижение по координатам
-				moveLibrary.x_y_move(start_position.x + programm_t[slayer].x[i] - 1, start_position.y + programm_t[slayer].y[i])
+				moveLibrary.x_y_move(start_position.x + programm_t[slayer].x[i], start_position.y + programm_t[slayer].y[i])
 				--определение нужного блока в инвентаре для строительства
 				::check_again::
 				first_slot_transfer() --переложить предмет из первого слота робота в любой другой
