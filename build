@@ -79,7 +79,7 @@ local start_position = {x,y,z}
 local pair_blocks = {}
 local pair_planks = {}
 local energyMinimym = 10000 --минимальное количество энергии
-local g_key = "OpenComputers:wrench" --гаечный ключ
+local g_key = "opencomputers:wrench" --гаечный ключ
 local wooden_slab = "minecraft:wooden_slab" --ступеньки из дерева
 local stone_slab = "minecraft:stone_slab" --ступеьки из камня
 --таблица ступенек
@@ -1100,7 +1100,7 @@ do
 			deb_enter("ПОЛОЖИ ГАЕЧНЫЙ ГЛЮЧ В ЛЮБОЙ СЛОТ РОБОТА!")
 		end
 		try_numbers =  try_numbers + 1
-	until find_something("OpenComputers:wrench") ~= 0
+	until find_something("opencomputers:wrench") ~= 0
 	--проверка высоты от робота до пола
 	file_robot_height()
 	--сохранение всех блоков в роботе в таблицу
