@@ -708,7 +708,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		robot.select(stairs_slot_num)
 		robot.transferTo(to_first_slot)
 		robot.select(1)
-		robot.useDown()
+		repeat until robot.useDown()
 		::try_again2::
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
@@ -724,13 +724,13 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 			elseif size_place > 5 then
 				size_place = 3
 			end
-			robot.placeDown(size_place)
+			repeat until robot.placeDown(size_place)
 			goto try_again2 
 		end
 		computer.beep(1000, 0.1)
 		robot.select(g_key_slot_num)
 		inv.equip()
-		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
+		while geo.analyze(0).metadata ~= metadata do repeat until robot.useDown() end
 		inv.equip()
 	else
 		moveLibrary.z_move(z + 1)
@@ -742,7 +742,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
-		robot.useDown()
+		repeat until robot.useDown()
 		moveLibrary.z_move(z)
 		local geoAnalyze2 = geo.analyze(0).name
 		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" or geoAnalyze2 == "minecraft:flowing_water" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("ЖДУ 3 СЕКУНДЫ", 3); goto try_again2 end
@@ -750,7 +750,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		inv.equip()
 		robot.select(g_key_slot_num)
 		inv.equip()
-		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
+		while geo.analyze(0).metadata ~= metadata do repeat until robot.useDown() end
 		moveLibrary.z_move(z)
 		inv.equip()
 	end
@@ -790,7 +790,7 @@ function build_planks(it_is_down, it_is_bouble)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
-		robot.useDown()
+		repeat until robot.useDown()
 		moveLibrary.z_move(mov_z)
 		local geoAnalyze = geo.analyze(0).name
 		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" or geoAnalyze == "minecraft:flowing_water" then
@@ -810,9 +810,9 @@ function build_planks(it_is_down, it_is_bouble)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
-		robot.useDown()
+		repeat until robot.useDown()
 		::build_again2::
-		robot.useDown()
+		repeat until robot.useDown()
 		moveLibrary.z_move(mov_z)
 			if geo.analyze(0).name ~= stone_or_wood then
 				moveLibrary.z_move(mov_z + 1)
@@ -828,7 +828,7 @@ function build_planks(it_is_down, it_is_bouble)
 		robot.transferTo(1)
 		--moveLibrary.z_move(mov_z - 1)
 		::build_again3::
-		robot.useDown()
+		repeat until robot.useDown()
 		local geoAnalyze2 = geo.analyze(0).name
 		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" or geoAnalyze2 == "minecraft:flowing_water" then
 			computer.beep(400, 2)
@@ -1133,7 +1133,7 @@ do
 				if programm_t_slayer_name_i == "minecraft:hopper" then hopper_block = true end
 				if programm_t_slayer_name_i == "minecraft:mossy_cobblestone" then programm_t[slayer].name[i] = "minecraft:cobblestone" end
 				if programm_t_slayer_name_i == "minecraft:bedrock" then programm_t[slayer].name[i] = "minecraft:stone" end
-				if programm_t_slayer_name_i == "minecraft:hopper" then programm_t[slayer].name[i] = "minecraft:stone" end
+				if programm_t_slayer_name_i == "minecraft:hopper" then programm_t[slayer].name[i] = "minecraft:gold_block" end
 				
 			else
 				programm_t[slayer].name[i] = "minecraft:trapdoor"
@@ -1214,4 +1214,3 @@ do
 		computer.beep(800,0.5)
 	end
 end
-
