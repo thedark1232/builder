@@ -762,7 +762,7 @@ function build_blocks(block_number_slot, hopper, block_name)
 	--inv.equip()
 	::try_again3::
 	--deb_enter("ставлю его в мир")
-	robot.placeDown()
+	repeat until robot.placeDown()
 	computer.beep(400, 0.1)
 	computer.beep(1000, 0.1)
 	computer.beep(400, 0.1)
