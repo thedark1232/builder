@@ -1024,7 +1024,7 @@ do
 	geo = components_and_librarys.getComponent("geolyzer")
 	inv = components_and_librarys.getComponent("inventory_controller")
 	modem = components_and_librarys.getComponent("modem")
-	components_and_librarys.getComponent("angel")
+	--components_and_librarys.getComponent("angel")
 	--библиотеки
 	table_sides = components_and_librarys.getLibrary("sizeLibrary").build_pair_sizes()
 	moveLibrary = components_and_librarys.getLibrary("moveLibrary")
