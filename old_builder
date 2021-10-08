@@ -29,7 +29,7 @@ local pair_planks = {}
 --минимальное количество энергии
 local energyMinimym = 10000
 --гаечный ключ
-local g_key = "OpenComputers:wrench"
+local g_key = "opencomputers:wrench"
 --ступеньки из дерева
 local wooden_slab = "minecraft:wooden_slab"
 --ступеьки из камня
@@ -248,7 +248,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		robot.select(stairs_slot_num)
 		robot.transferTo(to_first_slot)
 		::try_again2::
-		robot.useDown()
+		repeat until robot.useDown()
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
@@ -286,7 +286,7 @@ function build_blocks(block_number_slot, hopper)
 	robot.select(block_number_slot)
 	inv.equip()
 	::try_again3::
-	robot.useDown()
+	repeat until robot.useDown()
 	computer.beep(400, 0.1)
 	computer.beep(1000, 0.1)
 	computer.beep(400, 0.1)
@@ -428,7 +428,7 @@ function build_planks(it_is_down, it_is_bouble)
 	if it_is_down and it_is_bouble == false then
 		inv.equip()
 		::build_again::
-		robot.useDown()
+		repeat until robot.useDown()
 		table_librarys["moveLibrary"].z_move(mov_z - 1)
 		if geo.analyze(0).name == "minecraft:air" then
 			table_librarys["moveLibrary"].z_move(mov_z)
@@ -442,9 +442,9 @@ function build_planks(it_is_down, it_is_bouble)
 	elseif it_is_bouble	then
 		if wood == "wooden" then stone_or_wood = "minecraft:double_wooden_slab" else stone_or_wood = "minecraft:double_stone_slab" end
 		inv.equip()
-		robot.useDown()
+		repeat until robot.useDown()
 		::build_again2::
-		robot.useDown()
+		repeat until robot.useDown()
 		table_librarys["moveLibrary"].z_move(mov_z - 1)
 			if geo.analyze(0).name ~= stone_or_wood then
 				table_librarys["moveLibrary"].z_move(mov_z)
@@ -459,7 +459,7 @@ function build_planks(it_is_down, it_is_bouble)
 		robot.transferTo(1)
 		table_librarys["moveLibrary"].z_move(mov_z - 1)
 		::build_again3::
-		robot.useDown()
+		repeat until robot.useDown()
 		if geo.analyze(0).name == "minecraft:air" then
 			computer.beep(1000, 0.1)
 			deb("ЖДУ 10 СЕК")
@@ -673,6 +673,8 @@ do
 			if programm_t[slayer].name[i] == "minecraft:monster_egg" then programm_t[slayer].name[i] = "minecraft:stonebrick" end
 			if programm_t[slayer].name[i] == "minecraft:stone_button" then programm_t[slayer].name[i] = "minecraft:trapdoor" end
 			if programm_t[slayer].name[i] == "minecraft:hopper" then hopper_block = true end
+			if programm_t[slayer].name[i] == "minecraft:hopper" then hopper_block = true end
+			if programm_t[slayer].name[i] == "speedyhoppers:speedyhopper_mk1" then hopper_block = true end
 		---------------------------------------------------------------------------------
 			if programm_t[slayer].name[i] ~= "minecraft:trapdoor" then
 				--определение оставшегося количества энергии
