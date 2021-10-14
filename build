@@ -79,7 +79,7 @@ local start_position = {x,y,z}
 local pair_blocks = {}
 local pair_planks = {}
 local energyMinimym = 10000 --минимальное количество энергии
-local g_key = "opencomputers:wrench" --гаечный ключ
+local g_key = "OpenComputers:wrench" --гаечный ключ
 local wooden_slab = "minecraft:wooden_slab" --ступеньки из дерева
 local stone_slab = "minecraft:stone_slab" --ступеьки из камня
 --таблица ступенек
@@ -708,7 +708,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		robot.select(stairs_slot_num)
 		robot.transferTo(to_first_slot)
 		robot.select(1)
-		repeat until robot.useDown()
+		robot.useDown()
 		::try_again2::
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
@@ -724,13 +724,13 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 			elseif size_place > 5 then
 				size_place = 3
 			end
-			repeat until robot.placeDown(size_place)
+			robot.placeDown(size_place)
 			goto try_again2 
 		end
 		computer.beep(1000, 0.1)
 		robot.select(g_key_slot_num)
 		inv.equip()
-		while geo.analyze(0).metadata ~= metadata do repeat until robot.useDown() end
+		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
 		inv.equip()
 	else
 		moveLibrary.z_move(z + 1)
@@ -742,7 +742,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
-		repeat until robot.useDown()
+		robot.useDown()
 		moveLibrary.z_move(z)
 		local geoAnalyze2 = geo.analyze(0).name
 		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" or geoAnalyze2 == "minecraft:flowing_water" then computer.beep(400, 2); moveLibrary.z_move(z + 1); deb("ЖДУ 3 СЕКУНДЫ", 3); goto try_again2 end
@@ -750,7 +750,7 @@ function build_stairs(metadata, stairs_slot_num, g_key_slot_num)
 		inv.equip()
 		robot.select(g_key_slot_num)
 		inv.equip()
-		while geo.analyze(0).metadata ~= metadata do repeat until robot.useDown() end
+		while geo.analyze(0).metadata ~= metadata do robot.useDown() end
 		moveLibrary.z_move(z)
 		inv.equip()
 	end
@@ -762,7 +762,7 @@ function build_blocks(block_number_slot, hopper, block_name)
 	--inv.equip()
 	::try_again3::
 	--deb_enter("ставлю его в мир")
-	repeat until robot.placeDown()
+	robot.placeDown()
 	computer.beep(400, 0.1)
 	computer.beep(1000, 0.1)
 	computer.beep(400, 0.1)
@@ -790,7 +790,7 @@ function build_planks(it_is_down, it_is_bouble)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
-		repeat until robot.useDown()
+		robot.useDown()
 		moveLibrary.z_move(mov_z)
 		local geoAnalyze = geo.analyze(0).name
 		if geoAnalyze == "minecraft:air" or geoAnalyze == "Thaumcraft:blockAiry" or geoAnalyze == "minecraft:water" or geoAnalyze == "minecraft:flowing_water" then
@@ -810,9 +810,9 @@ function build_planks(it_is_down, it_is_bouble)
 		computer.beep(1000, 0.1)
 		computer.beep(400, 0.1)
 		computer.beep(1000, 0.1)
-		repeat until robot.useDown()
+		robot.useDown()
 		::build_again2::
-		repeat until robot.useDown()
+		robot.useDown()
 		moveLibrary.z_move(mov_z)
 			if geo.analyze(0).name ~= stone_or_wood then
 				moveLibrary.z_move(mov_z + 1)
@@ -828,7 +828,7 @@ function build_planks(it_is_down, it_is_bouble)
 		robot.transferTo(1)
 		--moveLibrary.z_move(mov_z - 1)
 		::build_again3::
-		repeat until robot.useDown()
+		robot.useDown()
 		local geoAnalyze2 = geo.analyze(0).name
 		if geoAnalyze2 == "minecraft:air" or geoAnalyze2 == "Thaumcraft:blockAiry" or geoAnalyze2 == "minecraft:water" or geoAnalyze2 == "minecraft:flowing_water" then
 			computer.beep(400, 2)
@@ -931,8 +931,9 @@ function return_and_find_item(block_name, meta, check_meta)
 	if second_check == first_check then
 		while robot.count(slot_number) < 50 do term.clear(); print("количество блоков собрано: " ..robot.count(slot_number).. " из 50"); print("в воронке закончились блоки"); print("жду заполнения воронки!!"); computer.beep(400, 1) end
 	else
-		while robot.count(slot_number) < 60 do term.clear(); print("количество блоков собрано: " ..robot.count(slot_number).. " из 60"); computer.beep(1000, 0.1); end
+		while robot.count(slot_number) < 59 do term.clear(); print("количество блоков собрано: " ..robot.count(slot_number).. " из 59"); computer.beep(1000, 0.1); end
 	end
+	robot.suckUp(1)
 	term.clear()
 	moveLibrary.moveOut(start_position.x, start_position.y, start_position.z + 1)
 	moveLibrary.z_move(pos_z)
@@ -967,8 +968,9 @@ function return_to_base_and_get_planks(block_name, meta_num, block_num_in_invent
 			if second_check2 == first_check2 then
 				while robot.count(slot_number) < 50 do term.clear(); print("количество планок собрано: " ..robot.count(1).. " из 50"); print("в воронке закончились планки"); print("жду заполнения воронки!!"); computer.beep(400, 1) end
 			else
-				while robot.count(1) < 60 do computer.beep(1000, 0.1); term.clear(); print("всего блоков: " ..robot.count(1).. " из 60") end
+				while robot.count(1) < 59 do computer.beep(1000, 0.1); term.clear(); print("всего блоков: " ..robot.count(1).. " из 59") end
 			end
+			robot.suckUp(1)
 			moveLibrary.moveOut(start_position.x + 4, start_position.y, start_position.z + 1)
 			moveLibrary.moveOut(start_position.x, start_position.y, start_position.z + 1)
 			robot.select(1) --выбрать первый слот у робота
@@ -1024,7 +1026,7 @@ do
 	geo = components_and_librarys.getComponent("geolyzer")
 	inv = components_and_librarys.getComponent("inventory_controller")
 	modem = components_and_librarys.getComponent("modem")
-	--components_and_librarys.getComponent("angel")
+	components_and_librarys.getComponent("angel")
 	--библиотеки
 	table_sides = components_and_librarys.getLibrary("sizeLibrary").build_pair_sizes()
 	moveLibrary = components_and_librarys.getLibrary("moveLibrary")
@@ -1100,7 +1102,7 @@ do
 			deb_enter("ПОЛОЖИ ГАЕЧНЫЙ ГЛЮЧ В ЛЮБОЙ СЛОТ РОБОТА!")
 		end
 		try_numbers =  try_numbers + 1
-	until find_something("opencomputers:wrench") ~= 0
+	until find_something("OpenComputers:wrench") ~= 0
 	--проверка высоты от робота до пола
 	file_robot_height()
 	--сохранение всех блоков в роботе в таблицу
